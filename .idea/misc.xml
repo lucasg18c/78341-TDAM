@@ -3,9 +3,12 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Lucas/Desktop/Facultad/TDAM/app/src/main/res/drawable/ic_comment.xml" value="0.2915" />
+        <entry key="..\:/Users/Lucas/Desktop/Facultad/TDAM/app/src/main/res/drawable/ic_eye.xml" value="0.2915" />
+        <entry key="..\:/Users/Lucas/Desktop/Facultad/TDAM/app/src/main/res/font/inter.xml" value="0.23129542539546816" />
         <entry key="..\:/Users/Lucas/Desktop/Facultad/TDAM/app/src/main/res/layout/activity_main.xml" value="0.3009833262077811" />
         <entry key="..\:/Users/Lucas/Desktop/Facultad/TDAM/app/src/main/res/layout/fragment_directory.xml" value="0.3009833262077811" />
-        <entry key="..\:/Users/Lucas/Desktop/Facultad/TDAM/app/src/main/res/layout/fragment_home.xml" value="0.3009833262077811" />
+        <entry key="..\:/Users/Lucas/Desktop/Facultad/TDAM/app/src/main/res/layout/fragment_home.xml" value="0.33" />
         <entry key="..\:/Users/Lucas/Desktop/Facultad/TDAM/app/src/main/res/layout/fragment_image.xml" value="0.2894399315946986" />
       </map>
     </option>
