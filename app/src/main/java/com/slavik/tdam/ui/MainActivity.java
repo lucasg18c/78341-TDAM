@@ -8,14 +8,15 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.slavik.tdam.R;
 import com.slavik.tdam.data.repository.IRepository;
-import com.slavik.tdam.data.repository.MockRepository;
 import com.slavik.tdam.data.repository.Repository;
+import com.slavik.tdam.model.Photoset;
 import com.slavik.tdam.ui.home.HomeFragment;
 
 public class MainActivity extends AppCompatActivity {
 
     private RequestQueue queue;
     private IRepository repository;
+    private Photoset currentPhotoset;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,5 +44,13 @@ public class MainActivity extends AppCompatActivity {
         if (queue != null) {
             queue.cancelAll("");
         }
+    }
+
+    public Photoset getCurrentPhotoset() {
+        return currentPhotoset;
+    }
+
+    public void setCurrentPhotoset(Photoset photoset) {
+        currentPhotoset = photoset;
     }
 }

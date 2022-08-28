@@ -13,6 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.slavik.tdam.R;
+import com.slavik.tdam.model.Photoset;
+import com.slavik.tdam.ui.MainActivity;
 
 public class DirectoryFragment extends Fragment {
 
@@ -32,6 +34,9 @@ public class DirectoryFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(DirectoryViewModel.class);
+
+        Photoset ps = ((MainActivity) requireActivity()).getCurrentPhotoset();
+        System.out.println(ps);
         // TODO: Use the ViewModel
     }
 

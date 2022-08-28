@@ -2,6 +2,8 @@ package com.slavik.tdam.model;
 
 import android.graphics.Bitmap;
 
+import androidx.annotation.Nullable;
+
 import java.util.Calendar;
 
 public class Photoset {
@@ -71,6 +73,15 @@ public class Photoset {
         this.videos = videos;
         this.visibilityCanSeeSet = visibilityCanSeeSet;
         this.needsInterstitial = needsInterstitial;
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if (!(obj instanceof Photoset)) return false;
+
+        Photoset o = (Photoset) obj;
+
+        return o.getId().equals(id);
     }
 
     public String getId() {
