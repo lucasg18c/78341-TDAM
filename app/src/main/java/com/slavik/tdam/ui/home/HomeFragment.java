@@ -40,20 +40,6 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        TextView lblDirectories = view.findViewById(R.id.lblDirectories);
-        mViewModel.directories().observe(getViewLifecycleOwner(), res -> {
-            lblDirectories.setText(res.size() + " directorios");
-        });
-
-        TextView lblImages = view.findViewById(R.id.lblImages);
-        //mViewModel.images().observe(getViewLifecycleOwner(), lblImages::setText);
-
-        ImageView img = view.findViewById(R.id.imgView);
-        mViewModel.image().observe(getViewLifecycleOwner(), img::setImageBitmap);
-
-        mViewModel.fetchDirectories();
-        mViewModel.fetchImages();
-        mViewModel.fetchImage();
+        mViewModel.fetchPhotosets();
     }
 }

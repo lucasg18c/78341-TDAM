@@ -43,7 +43,7 @@ public class Photoset {
             String description,
             boolean canComment,
             Calendar dateCreate,
-            Calendar date_update,
+            Calendar dateUpdate,
             int photos,
             int videos,
             boolean visibilityCanSeeSet,
@@ -63,7 +63,7 @@ public class Photoset {
         this.description = description;
         this.canComment = canComment;
         this.dateCreate = dateCreate;
-        this.dateUpdate = date_update;
+        this.dateUpdate = dateUpdate;
         this.photos = photos;
         this.videos = videos;
         this.visibilityCanSeeSet = visibilityCanSeeSet;

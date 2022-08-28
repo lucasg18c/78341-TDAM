@@ -4,23 +4,26 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
 import com.slavik.tdam.R;
-import com.slavik.tdam.data.remote.services.DirectoryService;
-import com.slavik.tdam.data.remote.services.ImageService;
+import com.slavik.tdam.data.repository.IRepository;
+import com.slavik.tdam.data.repository.MockRepository;
+import com.slavik.tdam.data.repository.Repository;
 import com.slavik.tdam.ui.home.HomeFragment;
 
 public class MainActivity extends AppCompatActivity {
 
-    private DirectoryService directoryService;
-    private ImageService imageService;
+    private RequestQueue queue;
+    private IRepository repository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        directoryService = new DirectoryService(this);
-        imageService = new ImageService(this);
+        queue = Volley.newRequestQueue(this);
+//        repository = new Repository(queue);
+        repository = new MockRepository();
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
@@ -30,11 +33,15 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public DirectoryService getDirectoryService() {
-        return directoryService;
+    public IRepository getRepository() {
+        return repository;
     }
 
-    public ImageService getImageService() {
-        return imageService;
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (queue != null) {
+            queue.cancelAll("");
+        }
     }
 }

@@ -1,6 +1,5 @@
 package com.slavik.tdam.data.remote.services;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.widget.ImageView;
 
@@ -8,7 +7,6 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.slavik.tdam.data.remote.dto.photo_comments.PhotoCommentsRoot;
 import com.slavik.tdam.data.remote.dto.photo_info.PhotoInfoRoot;
@@ -22,11 +20,11 @@ public class ImageService {
     private static final String BASE_URL = "https://www.flickr.com/services/rest/?method=";
     private static final String BASE_IMAGE_URL = "https://live.staticflickr.com/";
 
-    private final RequestQueue queue;
+    private final RequestQueue mQueue;
     private final Gson gson = new Gson();
 
-    public ImageService(Context context) {
-        queue = Volley.newRequestQueue(context);
+    public ImageService(RequestQueue queue) {
+        this.mQueue = queue;
     }
 
     public void getComments(String photoID, Response<List<Comment>> onResponse) {
@@ -37,7 +35,7 @@ public class ImageService {
                     onResponse.onResponse(res.toModel(), true);
                 },
                 error -> onResponse.onResponse(null, false));
-        queue.add(stringRequest);
+        mQueue.add(stringRequest);
     }
 
     public void getInfo(String photoID, Response<Photo> onResponse) {
@@ -48,7 +46,7 @@ public class ImageService {
                     onResponse.onResponse(res.toModel(), true);
                 },
                 error -> onResponse.onResponse(null, false));
-        queue.add(stringRequest);
+        mQueue.add(stringRequest);
     }
 
     public void getImage(String photoID, String serverID, String secret, ImageSize size, Response<Bitmap> onResponse) {
@@ -59,7 +57,7 @@ public class ImageService {
                 response -> onResponse.onResponse(response, true),
                 0, 0, ImageView.ScaleType.CENTER, Bitmap.Config.RGB_565,
                 error -> onResponse.onResponse(null, false));
-        queue.add(stringRequest);
+        mQueue.add(stringRequest);
     }
 
     public enum ImageSize {

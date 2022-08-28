@@ -1,11 +1,8 @@
 package com.slavik.tdam.data.remote.services;
 
-import android.content.Context;
-
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.slavik.tdam.data.remote.dto.photos.PhotosRoot;
 import com.slavik.tdam.data.remote.dto.photosets.PhotosetsRoot;
@@ -15,19 +12,19 @@ import com.slavik.tdam.util.Response;
 
 import java.util.List;
 
-public class DirectoryService {
+public class PhotosetService {
 
     private static final String url = "https://www.flickr.com/services/rest/?method=";
 
-    private final RequestQueue queue;
+    private final RequestQueue mQueue;
 
     private final Gson gson = new Gson();
 
-    public DirectoryService(Context context) {
-        queue = Volley.newRequestQueue(context);
+    public PhotosetService(RequestQueue queue) {
+        this.mQueue = queue;
     }
 
-    public void getDirectories(Response<List<Photoset>> onResponse) {
+    public void getPhotosets(Response<List<Photoset>> onResponse) {
         String path = url + "flickr.photosets.getList&api_key=18a488f30edea9957660c8e5293af56d&user_id=196361992%40N04&format=json&nojsoncallback=1";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, path,
                 response -> {
@@ -35,7 +32,7 @@ public class DirectoryService {
                     onResponse.onResponse(res.toModel(), true);
                 },
                 error -> onResponse.onResponse(null, false));
-        queue.add(stringRequest);
+        mQueue.add(stringRequest);
     }
 
     public void getImages(String photosetID, Response<List<Photo>> onResponse) {
@@ -46,6 +43,6 @@ public class DirectoryService {
                     onResponse.onResponse(res.toModel(), true);
                 },
                 error -> onResponse.onResponse(null, false));
-        queue.add(stringRequest);
+        mQueue.add(stringRequest);
     }
 }
