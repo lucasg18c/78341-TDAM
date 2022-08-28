@@ -22,8 +22,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         queue = Volley.newRequestQueue(this);
-//        repository = new Repository(queue);
-        repository = new MockRepository();
+        repository = new Repository(queue);
+//        repository = new MockRepository();
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()

@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">TDAM</string>
+    <string name="photoset_image">imagen del directorio</string>
+    <string name="comments_count">total comentarios</string>
+    <string name="views_count">total vistas</string>
+    <string name="photosets">Directorios</string>
+    <string name="photos">fotos</string>
 </resources>

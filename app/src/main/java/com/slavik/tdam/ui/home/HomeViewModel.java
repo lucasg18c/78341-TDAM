@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.slavik.tdam.data.repository.IRepository;
+import com.slavik.tdam.model.Photo;
 import com.slavik.tdam.model.Photoset;
 import com.slavik.tdam.ui.MainActivity;
 
@@ -29,8 +30,12 @@ public class HomeViewModel extends ViewModel {
     }
 
     public void fetchPhotosets() {
-        _photosets.postValue(repository.getPhotosets());
+        repository.getPhotosets((data, isSuccess) -> {
+            if (isSuccess) {
+                List<Photoset> ps = _photosets.getValue();
+                ps.add(data);
+                _photosets.postValue(ps);
+            }
+        });
     }
-
-
 }

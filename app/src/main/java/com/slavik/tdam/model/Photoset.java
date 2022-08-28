@@ -1,5 +1,7 @@
 package com.slavik.tdam.model;
 
+import android.graphics.Bitmap;
+
 import java.util.Calendar;
 
 public class Photoset {
@@ -23,6 +25,7 @@ public class Photoset {
     private int videos;
     private boolean visibilityCanSeeSet;
     private boolean needsInterstitial;
+    private Bitmap primaryPhoto;
 
     public Photoset() {
     }
@@ -228,5 +231,13 @@ public class Photoset {
 
     public void setNeedsInterstitial(boolean needsInterstitial) {
         this.needsInterstitial = needsInterstitial;
+    }
+
+    public Bitmap getPrimaryPhoto() {
+        return primaryPhoto;
+    }
+
+    public void setPrimaryPhoto(Bitmap primaryPhoto) {
+        this.primaryPhoto = primaryPhoto;
     }
 }
