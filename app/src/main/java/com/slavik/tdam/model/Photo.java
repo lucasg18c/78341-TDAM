@@ -1,5 +1,7 @@
 package com.slavik.tdam.model;
 
+import android.graphics.Bitmap;
+
 import java.util.Calendar;
 
 public class Photo {
@@ -17,6 +19,8 @@ public class Photo {
     private String description;
     private Calendar dateUploaded;
     private long commentCount;
+
+    private Bitmap image;
 
     public Photo() {
     }
@@ -65,6 +69,14 @@ public class Photo {
         this.isPublic = isPublic;
         this.isFriend = isFriend;
         this.isFamily = isFamily;
+    }
+
+    public Bitmap getImage() {
+        return image;
+    }
+
+    public void setImage(Bitmap image) {
+        this.image = image;
     }
 
     public long getViewsCount() {

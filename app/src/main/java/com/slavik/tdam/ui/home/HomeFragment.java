@@ -55,12 +55,10 @@ public class HomeFragment extends Fragment {
 
         mViewModel.photosets().observe(getViewLifecycleOwner(),
                 p -> photosetsAdapter.setPhotosets(p));
-
-        //mViewModel.fetchPhotosets();
     }
 
     public void onPhotosetClicked(Photoset photoset) {
-        ((MainActivity)requireActivity()).setCurrentPhotoset(photoset);
+        ((MainActivity) requireActivity()).setCurrentPhotoset(photoset);
         FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.fragment_container_view, DirectoryFragment.class, null)

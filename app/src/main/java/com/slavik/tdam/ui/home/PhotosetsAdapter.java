@@ -79,7 +79,7 @@ public class PhotosetsAdapter extends RecyclerView.Adapter<PhotosetsAdapter.Phot
         public void bind(Photoset photoset) {
             mPhotoset = photoset;
             lblTitle.setText(photoset.getTitle());
-            lblPhotosCount.setText(String.valueOf(photoset.getCountPhotos()));
+            lblPhotosCount.setText(photoset.getCountPhotos() == 0 ? "Sin" : String.valueOf(photoset.getCountPhotos()));
             lblDescription.setText(photoset.getDescription());
             lblViewsCount.setText(photoset.getCountViews());
             lblCommentsCount.setText(photoset.getCountComments());
