@@ -18,7 +18,7 @@ public class Photoset {
     private String description;
     private boolean canComment;
     private Calendar dateCreate;
-    private Calendar date_update;
+    private Calendar dateUpdate;
     private int photos;
     private int videos;
     private boolean visibilityCanSeeSet;
@@ -63,7 +63,7 @@ public class Photoset {
         this.description = description;
         this.canComment = canComment;
         this.dateCreate = dateCreate;
-        this.date_update = date_update;
+        this.dateUpdate = date_update;
         this.photos = photos;
         this.videos = videos;
         this.visibilityCanSeeSet = visibilityCanSeeSet;
@@ -190,12 +190,12 @@ public class Photoset {
         this.dateCreate = dateCreate;
     }
 
-    public Calendar getDate_update() {
-        return date_update;
+    public Calendar getDateUpdate() {
+        return dateUpdate;
     }
 
-    public void setDate_update(Calendar date_update) {
-        this.date_update = date_update;
+    public void setDateUpdate(Calendar dateUpdate) {
+        this.dateUpdate = dateUpdate;
     }
 
     public int getPhotos() {

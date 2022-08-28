@@ -47,6 +47,16 @@ public class HomeViewModel extends ViewModel {
                 mDirectories.postValue(res);
             }
         });
+
+        imageService.getComments("52311372150", (data, isSuccess) -> {
+            System.out.println(data);
+        });
+
+        imageService.getInfo("52311372150", (data, isSuccess) -> {
+            System.out.println(data);
+        });
+
+
     }
 
     public void fetchImages() {

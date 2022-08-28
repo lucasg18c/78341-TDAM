@@ -1,5 +1,7 @@
 package com.slavik.tdam.model;
 
+import java.util.Calendar;
+
 public class Photo {
     private String id;
     private String secret;
@@ -11,7 +13,38 @@ public class Photo {
     private boolean isFriend;
     private boolean isFamily;
 
+    private long viewsCount;
+    private String description;
+    private Calendar dateUploaded;
+    private long commentCount;
+
     public Photo() {
+    }
+
+    public Photo(String id,
+                 String secret,
+                 String server,
+                 int farm,
+                 String title,
+                 boolean isPublic,
+                 boolean isFriend,
+                 boolean isFamily,
+                 long viewsCount,
+                 String description,
+                 Calendar dateUploaded,
+                 long commentCount) {
+        this.id = id;
+        this.secret = secret;
+        this.server = server;
+        this.farm = farm;
+        this.title = title;
+        this.isPublic = isPublic;
+        this.isFriend = isFriend;
+        this.isFamily = isFamily;
+        this.viewsCount = viewsCount;
+        this.description = description;
+        this.dateUploaded = dateUploaded;
+        this.commentCount = commentCount;
     }
 
     public Photo(String id,
@@ -32,6 +65,38 @@ public class Photo {
         this.isPublic = isPublic;
         this.isFriend = isFriend;
         this.isFamily = isFamily;
+    }
+
+    public long getViewsCount() {
+        return viewsCount;
+    }
+
+    public void setViewsCount(long viewsCount) {
+        this.viewsCount = viewsCount;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Calendar getDateUploaded() {
+        return dateUploaded;
+    }
+
+    public void setDateUploaded(Calendar dateUploaded) {
+        this.dateUploaded = dateUploaded;
+    }
+
+    public long getCommentCount() {
+        return commentCount;
+    }
+
+    public void setCommentCount(long commentCount) {
+        this.commentCount = commentCount;
     }
 
     public String getId() {

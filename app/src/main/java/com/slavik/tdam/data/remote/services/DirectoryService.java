@@ -48,12 +48,4 @@ public class DirectoryService {
                 error -> onResponse.onResponse(null, false));
         queue.add(stringRequest);
     }
-
-    public void getInfo(String photosetID, Response<String> onResponse) {
-        String path = url + "flickr.photosets.getInfo&api_key=18a488f30edea9957660c8e5293af56d&photoset_id=" + photosetID + "&user_id=196361992%40N04&format=json&nojsoncallback=1";
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, path,
-                response -> onResponse.onResponse(response, true),
-                error -> onResponse.onResponse(error.toString(), false));
-        queue.add(stringRequest);
-    }
 }
