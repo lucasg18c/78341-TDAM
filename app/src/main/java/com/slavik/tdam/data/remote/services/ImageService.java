@@ -1,4 +1,4 @@
-package com.slavik.tdam.data.remote;
+package com.slavik.tdam.data.remote.services;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -22,7 +22,7 @@ public class ImageService {
     }
 
     public void getComments(String photoID, Response<String> onResponse) {
-        String path = BASE_URL + "flickr.photos.comments.getList&api_key=ff01e4bd798ab53efcf4d02337f12d5b&photo_id=" + photoID + "&format=json&nojsoncallback=1";
+        String path = BASE_URL + "flickr.photos.comments.getList&api_key=18a488f30edea9957660c8e5293af56d&photo_id=" + photoID + "&format=json&nojsoncallback=1";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, path,
                 response -> onResponse.onResponse(response, true),
                 error -> onResponse.onResponse(error.toString(), false));
@@ -30,7 +30,7 @@ public class ImageService {
     }
 
     public void getInfo(String photoID, Response<String> onResponse) {
-        String path = BASE_URL + "flickr.photos.comments.getInfo&api_key=ff01e4bd798ab53efcf4d02337f12d5b&photo_id=" + photoID + "&format=json&nojsoncallback=1";
+        String path = BASE_URL + "flickr.photos.comments.getInfo&api_key=18a488f30edea9957660c8e5293af56d&photo_id=" + photoID + "&format=json&nojsoncallback=1";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, path,
                 response -> onResponse.onResponse(response, true),
                 error -> onResponse.onResponse(error.toString(), false));

@@ -5,8 +5,8 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.slavik.tdam.R;
-import com.slavik.tdam.data.remote.DirectoryService;
-import com.slavik.tdam.data.remote.ImageService;
+import com.slavik.tdam.data.remote.services.DirectoryService;
+import com.slavik.tdam.data.remote.services.ImageService;
 import com.slavik.tdam.ui.home.HomeFragment;
 
 public class MainActivity extends AppCompatActivity {

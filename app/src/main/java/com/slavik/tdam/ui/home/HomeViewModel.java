@@ -7,24 +7,28 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.slavik.tdam.data.remote.DirectoryService;
-import com.slavik.tdam.data.remote.ImageService;
+import com.slavik.tdam.data.remote.services.DirectoryService;
+import com.slavik.tdam.data.remote.services.ImageService;
+import com.slavik.tdam.model.Photo;
+import com.slavik.tdam.model.Photoset;
 import com.slavik.tdam.ui.MainActivity;
+
+import java.util.List;
 
 public class HomeViewModel extends ViewModel {
 
-    private final MutableLiveData<String> mDirectories = new MutableLiveData<>();
-    private final MutableLiveData<String> mImages = new MutableLiveData<>();
+    private final MutableLiveData<List<Photoset>> mDirectories = new MutableLiveData<>();
+    private final MutableLiveData<List<Photo>> mImages = new MutableLiveData<>();
     private final MutableLiveData<Bitmap> mImage = new MutableLiveData<>();
     private DirectoryService directoryService;
     private ImageService imageService;
 
-    public LiveData<String> directories() {
+    public LiveData<List<Photoset>> directories() {
         return mDirectories;
     }
 
-    public LiveData<String> images() {
-        return mDirectories;
+    public LiveData<List<Photo>> images() {
+        return mImages;
     }
 
     public LiveData<Bitmap> image() {
@@ -46,7 +50,7 @@ public class HomeViewModel extends ViewModel {
     }
 
     public void fetchImages() {
-        directoryService.getImages("72177720301564674", (res, success) -> {
+        directoryService.getImages("72177720301592528", (res, success) -> {
             if (success) {
                 mImages.postValue(res);
             }
