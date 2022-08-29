@@ -11,6 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.slavik.tdam.R;
 import com.slavik.tdam.model.Photo;
@@ -26,6 +28,8 @@ public class ImageFragment extends Fragment {
     private TextView lblDescription;
     private TextView lblCommentsCount;
     private ImageView img;
+    private CommentAdapter adapter;
+    private View divider;
 
     public static ImageFragment newInstance() {
         return new ImageFragment();
@@ -44,9 +48,17 @@ public class ImageFragment extends Fragment {
         lblCreated = v.findViewById(R.id.lblCreated);
         lblDescription = v.findViewById(R.id.lblDescription);
         lblCommentsCount = v.findViewById(R.id.lblCommentsCount);
+        divider = v.findViewById(R.id.dividerComments);
 
         img = v.findViewById(R.id.imgPhoto);
         img.setImageBitmap(photo.getImage());
+
+        RecyclerView rv = v.findViewById(R.id.listComments);
+        LinearLayoutManager lm = new LinearLayoutManager(requireContext());
+
+        adapter = new CommentAdapter();
+        rv.setLayoutManager(lm);
+        rv.setAdapter(adapter);
 
         v.findViewById(R.id.btnShare).setOnClickListener(b -> {
         });
@@ -80,12 +92,20 @@ public class ImageFragment extends Fragment {
                 lblDescription.setVisibility(View.GONE);
             }
 
-            lblCommentsCount.setText(photo.getCommentCount() + " comentarios");
+            divider.setVisibility(photo.getCommentCount() == 0 ? View.GONE : View.VISIBLE);
+            if (photo.getCommentCount() == 0) {
+                lblCommentsCount.setText("Sin comentarios");
+            } else {
+                lblCommentsCount.setText(photo.getCommentCount() + " comentarios");
+            }
+
 
             if (photo.getImage() != null) {
                 img.setImageBitmap(photo.getImage());
             }
-
         });
+
+        mViewModel.comments().observe(getViewLifecycleOwner(),
+                comments -> adapter.setComments(comments));
     }
 }

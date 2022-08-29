@@ -10,6 +10,11 @@ public class CommentsDTO {
     public String photo_id;
 
     public List<Comment> toModel() {
+
+        if (comment == null) {
+            return new ArrayList<>();
+        }
+
         List<Comment> comments = new ArrayList<>();
 
         for (CommentDTO c : comment) {

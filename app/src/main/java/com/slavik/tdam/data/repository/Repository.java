@@ -3,9 +3,12 @@ package com.slavik.tdam.data.repository;
 import com.android.volley.RequestQueue;
 import com.slavik.tdam.data.remote.services.ImageService;
 import com.slavik.tdam.data.remote.services.PhotosetService;
+import com.slavik.tdam.model.Comment;
 import com.slavik.tdam.model.Photo;
 import com.slavik.tdam.model.Photoset;
 import com.slavik.tdam.util.Response;
+
+import java.util.List;
 
 public class Repository implements IRepository {
 
@@ -72,6 +75,15 @@ public class Repository implements IRepository {
                         data.setImage(data1);
                         response.onResponse(data, true);
                     });
+        });
+    }
+
+    @Override
+    public void getComments(Photo photo, Response<List<Comment>> response) {
+        imageService.getComments(photo.getId(), (data, isSuccess) -> {
+            if (!isSuccess) return;
+
+            response.onResponse(data, true);
         });
     }
 }
