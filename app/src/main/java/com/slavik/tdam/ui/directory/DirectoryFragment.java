@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,8 +16,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.slavik.tdam.R;
 import com.slavik.tdam.model.Photo;
+import com.slavik.tdam.model.Photoset;
 import com.slavik.tdam.ui.MainActivity;
 import com.slavik.tdam.ui.image.ImageFragment;
+
+import java.util.Calendar;
 
 public class DirectoryFragment extends Fragment {
 
@@ -38,6 +42,29 @@ public class DirectoryFragment extends Fragment {
 
         rv.setLayoutManager(layoutManager);
         rv.setAdapter(adapter);
+        rv.setNestedScrollingEnabled(false);
+
+        Photoset photoset = ((MainActivity) requireActivity()).getCurrentPhotoset();
+
+        Calendar c = photoset.getDateCreate();
+        String date = c.get(Calendar.DAY_OF_MONTH) + "/" + c.get(Calendar.MONTH) + "/" + c.get(Calendar.YEAR);
+
+        ((TextView) v.findViewById(R.id.lblTitle)).setText(photoset.getTitle());
+
+        TextView lblDescription = v.findViewById(R.id.lblDescription);
+        lblDescription.setText(photoset.getDescription());
+        if (photoset.getDescription().length() == 0) {
+            lblDescription.setVisibility(View.GONE);
+        }
+
+        ((TextView) v.findViewById(R.id.lblCreated)).setText("Creada " + date);
+        ((TextView) v.findViewById(R.id.lblViewsCount)).setText(photoset.getCountViews());
+        ((TextView) v.findViewById(R.id.lblCommentsCount)).setText(photoset.getCountComments());
+        ((TextView) v.findViewById(R.id.lblPhotosCount)).setText(photoset.getCountPhotos() + " fotos");
+
+        v.findViewById(R.id.btnBack).setOnClickListener(
+                b -> requireActivity().getSupportFragmentManager().popBackStack());
+
 
         return v;
     }
