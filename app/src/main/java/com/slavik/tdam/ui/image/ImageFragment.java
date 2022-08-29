@@ -1,6 +1,9 @@
 package com.slavik.tdam.ui.image;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +33,7 @@ public class ImageFragment extends Fragment {
     private ImageView img;
     private CommentAdapter adapter;
     private View divider;
+    private Photo currentPhoto;
 
     public static ImageFragment newInstance() {
         return new ImageFragment();
@@ -41,6 +45,7 @@ public class ImageFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_image, container, false);
 
         Photo photo = ((MainActivity) requireActivity()).getCurrentPhoto();
+        currentPhoto = photo;
 
         ((TextView) v.findViewById(R.id.lblTitle)).setText(photo.getTitle());
 
@@ -61,6 +66,17 @@ public class ImageFragment extends Fragment {
         rv.setAdapter(adapter);
 
         v.findViewById(R.id.btnShare).setOnClickListener(b -> {
+            Intent email = new Intent(Intent.ACTION_SEND);
+            //email.putExtra(Intent.EXTRA_EMAIL, new String[]{ });
+            email.putExtra(Intent.EXTRA_SUBJECT, "Imagen de TDAM");
+            email.putExtra(Intent.EXTRA_TEXT, "Hola! Aquí te comparto una imagen desde mi app para TDAM 😎");
+            String path = MediaStore.Images.Media.insertImage(requireActivity().getContentResolver(), currentPhoto.getImage(), currentPhoto.getTitle(), currentPhoto.getDescription() == null ? "" : currentPhoto.getDescription());
+            Uri uri = Uri.parse(path);
+
+            email.putExtra(Intent.EXTRA_STREAM, uri);
+            email.setType("image/jpg");
+
+            startActivity(Intent.createChooser(email, "Enviar por email"));
         });
 
         v.findViewById(R.id.btnBack).setOnClickListener(
@@ -81,6 +97,7 @@ public class ImageFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         mViewModel.photo().observe(getViewLifecycleOwner(), photo -> {
+            currentPhoto = photo;
             lblAuthor.setText("Por " + photo.getAuthor());
 
             Calendar c = photo.getDateUploaded();
@@ -98,7 +115,6 @@ public class ImageFragment extends Fragment {
             } else {
                 lblCommentsCount.setText(photo.getCommentCount() + " comentarios");
             }
-
 
             if (photo.getImage() != null) {
                 img.setImageBitmap(photo.getImage());
