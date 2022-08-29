@@ -24,6 +24,8 @@ public class Photo {
 
     private Bitmap image;
 
+    private String author;
+
     public Photo() {
     }
 
@@ -38,7 +40,8 @@ public class Photo {
                  long viewsCount,
                  String description,
                  Calendar dateUploaded,
-                 long commentCount) {
+                 long commentCount,
+                 String author) {
         this.id = id;
         this.secret = secret;
         this.server = server;
@@ -51,6 +54,7 @@ public class Photo {
         this.description = description;
         this.dateUploaded = dateUploaded;
         this.commentCount = commentCount;
+        this.author = author;
     }
 
     public Photo(String id,
@@ -192,5 +196,13 @@ public class Photo {
 
     public void setFamily(boolean family) {
         isFamily = family;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
     }
 }

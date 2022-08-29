@@ -20,7 +20,8 @@ public class PhotoInfoRoot {
                 Long.parseLong(photo.views),
                 photo.description._content,
                 Convert.unixToCalendar(Long.parseLong(photo.dateuploaded)),
-                Long.parseLong(photo.comments._content)
+                Long.parseLong(photo.comments._content),
+                photo.owner.username
         );
     }
 }

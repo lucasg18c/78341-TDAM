@@ -10,4 +10,5 @@ public interface IRepository {
 
     void getPhotosets(Response<Photoset> response);
     void getPhotos(String photosetID, Response<Photo> response);
+    void getPhoto(Photo photo, Response<Photo> response);
 }

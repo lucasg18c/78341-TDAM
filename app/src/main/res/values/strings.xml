@@ -6,4 +6,6 @@
     <string name="photosets">Directorios</string>
     <string name="photos">fotos</string>
     <string name="photo">Foto</string>
+    <string name="go_back">volver</string>
+    <string name="share">compartir</string>
 </resources>

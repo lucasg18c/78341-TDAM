@@ -56,4 +56,22 @@ public class Repository implements IRepository {
             }
         });
     }
+
+    @Override
+    public void getPhoto(Photo photo, Response<Photo> response) {
+        imageService.getInfo(photo.getId(), (data, isSuccess) -> {
+            if (!isSuccess) return;
+
+            response.onResponse(data, true);
+
+            imageService.getImage(data.getId(),
+                    data.getServer(),
+                    data.getSecret(),
+                    ImageService.ImageSize.b,
+                    (data1, isSuccess1) -> {
+                        data.setImage(data1);
+                        response.onResponse(data, true);
+                    });
+        });
+    }
 }
