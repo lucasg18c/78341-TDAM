@@ -9,6 +9,7 @@ import com.android.volley.toolbox.Volley;
 import com.slavik.tdam.R;
 import com.slavik.tdam.data.repository.IRepository;
 import com.slavik.tdam.data.repository.Repository;
+import com.slavik.tdam.model.Photo;
 import com.slavik.tdam.model.Photoset;
 import com.slavik.tdam.ui.home.HomeFragment;
 
@@ -17,6 +18,7 @@ public class MainActivity extends AppCompatActivity {
     private RequestQueue queue;
     private IRepository repository;
     private Photoset currentPhotoset;
+    private Photo currentPhoto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,5 +54,13 @@ public class MainActivity extends AppCompatActivity {
 
     public void setCurrentPhotoset(Photoset photoset) {
         currentPhotoset = photoset;
+    }
+
+    public Photo getCurrentPhoto() {
+        return currentPhoto;
+    }
+
+    public void setCurrentPhoto(Photo currentPhoto) {
+        this.currentPhoto = currentPhoto;
     }
 }

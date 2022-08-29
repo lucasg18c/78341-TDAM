@@ -5,4 +5,5 @@
     <string name="views_count">total vistas</string>
     <string name="photosets">Directorios</string>
     <string name="photos">fotos</string>
+    <string name="photo">Foto</string>
 </resources>

@@ -19,7 +19,7 @@ public class HomeViewModel extends ViewModel {
 
     private IRepository repository;
 
-    public void Init(Fragment fragment) {
+    public void init(Fragment fragment) {
         MainActivity activity = (MainActivity) fragment.requireActivity();
         repository = activity.getRepository();
         fetchPhotosets();
@@ -34,6 +34,7 @@ public class HomeViewModel extends ViewModel {
             if (isSuccess) {
                 List<Photoset> ps = _photosets.getValue();
 
+                assert ps != null;
                 int i = ps.indexOf(data);
 
                 if (i == -1) {

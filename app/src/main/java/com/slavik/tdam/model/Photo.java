@@ -2,6 +2,8 @@ package com.slavik.tdam.model;
 
 import android.graphics.Bitmap;
 
+import androidx.annotation.Nullable;
+
 import java.util.Calendar;
 
 public class Photo {
@@ -69,6 +71,15 @@ public class Photo {
         this.isPublic = isPublic;
         this.isFriend = isFriend;
         this.isFamily = isFamily;
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if (!(obj instanceof Photo)) return false;
+
+        Photo o = (Photo) obj;
+
+        return o.getId().equals(id);
     }
 
     public Bitmap getImage() {

@@ -46,7 +46,7 @@ public class HomeFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
-        mViewModel.Init(this);
+        mViewModel.init(this);
     }
 
     @Override
