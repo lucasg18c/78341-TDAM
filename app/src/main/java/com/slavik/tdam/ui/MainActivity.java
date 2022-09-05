@@ -1,17 +1,21 @@
 package com.slavik.tdam.ui;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.room.Room;
 
 import com.android.volley.RequestQueue;
@@ -31,23 +35,39 @@ public class MainActivity extends AppCompatActivity {
     private Photoset currentPhotoset;
     private Photo currentPhoto;
     private TextView lblNoConection;
+    private final BroadcastReceiver networkChangeReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            ConnectivityManager connectivityManager
+                    = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo activeNetworkInfo = connectivityManager != null ? connectivityManager.getActiveNetworkInfo() : null;
+            boolean connected = activeNetworkInfo != null && activeNetworkInfo.isConnected();
+            lblNoConection.setVisibility(connected ? View.GONE : View.VISIBLE);
+
+            if (!connected) {
+                NotificationCompat.Builder builder = new NotificationCompat.Builder(MainActivity.this, "CHANNEL_CONECTION")
+                        .setSmallIcon(R.drawable.ic_camera_wifi)
+                        .setContentTitle("Navegando sin conexión")
+                        .setStyle(new NotificationCompat.BigTextStyle()
+                                .bigText("Podrás acceder a contenido nuevo cuando la conexión se restablezca."))
+                        .setPriority(NotificationCompat.PRIORITY_MAX);
+
+                NotificationManagerCompat notificationManager =
+                        NotificationManagerCompat.from(MainActivity.this);
+
+                int id = (int) (Math.random() * 10000);
+                notificationManager.notify(id, builder.build());
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        createNotificationChannel();
         lblNoConection = findViewById(R.id.lblNoConection);
-
-//        new NetworkChangeReceiver().observe(state -> {
-//
-//            Toast.makeText(
-//                            MainActivity.this,
-//                            "La conexión cambió a " + state,
-//                            Toast.LENGTH_LONG)
-//                    .show();
-//        });
-
 
         DatabaseTDAM db = Room.databaseBuilder(
                         getApplicationContext(),
@@ -58,7 +78,6 @@ public class MainActivity extends AppCompatActivity {
 
         queue = Volley.newRequestQueue(this);
         repository = new Repository(queue, db, getContentResolver());
-//        repository = new MockRepository();
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
@@ -68,16 +87,17 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private final BroadcastReceiver networkChangeReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            ConnectivityManager connectivityManager
-                    = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo activeNetworkInfo = connectivityManager != null ? connectivityManager.getActiveNetworkInfo() : null;
-            boolean connected = activeNetworkInfo != null && activeNetworkInfo.isConnected();
-            lblNoConection.setVisibility(connected ? View.GONE : View.VISIBLE);
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "Alerta de conexión";
+            String description = "Notificaciones sobre el estado de conexión del dispositivo en tiempo de ejecución";
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel channel = new NotificationChannel("CHANNEL_CONECTION", name, importance);
+            channel.setDescription(description);
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
         }
-    };
+    }
 
     @Override
     protected void onResume() {
