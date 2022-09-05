@@ -1,6 +1,7 @@
 package com.slavik.tdam.ui.directory;
 
 import android.annotation.SuppressLint;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,10 +72,12 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
             mPhoto = photo;
 
             lblPhotoTitle.setText(photo.getTitle());
-            lblCommentsCount.setText(String.valueOf(photo.getCommentCount()));
+            lblCommentsCount.setText(String.valueOf(photo.commentsCount()));
 
-            if (photo.getImage() != null) {
-                imgPhoto.setImageBitmap(photo.getImage());
+            Bitmap bm = photo.getLowQuality();
+
+            if (bm != null) {
+                imgPhoto.setImageBitmap(bm);
             }
         }
     }

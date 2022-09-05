@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface IRepository {
 
-    void getPhotosets(Response<Photoset> response);
+    void getPhotosets(boolean forceCache, Response<List<Photoset>> response);
     void getPhotos(String photosetID, Response<Photo> response);
     void getPhoto(Photo photo, Response<Photo> response);
     void getComments(Photo photo, Response<List<Comment>> response);

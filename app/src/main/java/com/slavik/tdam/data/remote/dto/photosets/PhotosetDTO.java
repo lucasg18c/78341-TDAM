@@ -36,27 +36,15 @@ public class PhotosetDTO {
     public int total;
 
     public Photoset toModel() {
-        return new Photoset(
-                id,
-                owner,
-                username,
-                primary,
-                secret,
-                server,
-                farm,
-                count_views,
-                count_comments,
-                count_photos,
-                count_videos,
-                title._content,
-                description._content,
-                can_comment == 1,
-                Convert.unixToCalendar(Long.parseLong(date_create)),
-                Convert.unixToCalendar(Long.parseLong(date_update)),
-                photos,
-                videos,
-                visibility_can_see_set == 1,
-                needs_interstitial == 1
-        );
+
+        Photoset ps = new Photoset();
+
+        ps.setId(id);
+        ps.setCreated(Convert.unixToCalendar(Long.parseLong(date_create)));
+        ps.setTitle(title._content);
+        ps.setDescription(description._content);
+        ps.setPhotos(new ArrayList<>(count_photos));
+
+        return ps;
     }
 }

@@ -1,6 +1,7 @@
 package com.slavik.tdam.ui.image;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -56,7 +57,10 @@ public class ImageFragment extends Fragment {
         divider = v.findViewById(R.id.dividerComments);
 
         img = v.findViewById(R.id.imgPhoto);
-        img.setImageBitmap(photo.getImage());
+        Bitmap bm = photo.getLowQuality();
+        if (bm != null) {
+            img.setImageBitmap(bm);
+        }
 
         RecyclerView rv = v.findViewById(R.id.listComments);
         LinearLayoutManager lm = new LinearLayoutManager(requireContext());
@@ -70,7 +74,7 @@ public class ImageFragment extends Fragment {
             //email.putExtra(Intent.EXTRA_EMAIL, new String[]{ });
             email.putExtra(Intent.EXTRA_SUBJECT, "Imagen de TDAM");
             email.putExtra(Intent.EXTRA_TEXT, "Hola! Aquí te comparto una imagen desde mi app para TDAM 😎");
-            String path = MediaStore.Images.Media.insertImage(requireActivity().getContentResolver(), currentPhoto.getImage(), currentPhoto.getTitle(), currentPhoto.getDescription() == null ? "" : currentPhoto.getDescription());
+            String path = MediaStore.Images.Media.insertImage(requireActivity().getContentResolver(), currentPhoto.getHighQuality(), currentPhoto.getTitle(), currentPhoto.getDescription() == null ? "" : currentPhoto.getDescription());
             Uri uri = Uri.parse(path);
 
             email.putExtra(Intent.EXTRA_STREAM, uri);
@@ -98,9 +102,9 @@ public class ImageFragment extends Fragment {
 
         mViewModel.photo().observe(getViewLifecycleOwner(), photo -> {
             currentPhoto = photo;
-            lblAuthor.setText("Por " + photo.getAuthor());
+//            lblAuthor.setText("Por " + photo.getAuthor()); todo
 
-            Calendar c = photo.getDateUploaded();
+            Calendar c = photo.getPosted();
             String date = c.get(Calendar.DAY_OF_MONTH) + "/" + c.get(Calendar.MONTH) + "/" + c.get(Calendar.YEAR);
             lblCreated.setText("Subida " + date);
 
@@ -109,15 +113,16 @@ public class ImageFragment extends Fragment {
                 lblDescription.setVisibility(View.GONE);
             }
 
-            divider.setVisibility(photo.getCommentCount() == 0 ? View.GONE : View.VISIBLE);
-            if (photo.getCommentCount() == 0) {
+            divider.setVisibility(photo.commentsCount() == 0 ? View.GONE : View.VISIBLE);
+            if (photo.commentsCount() == 0) {
                 lblCommentsCount.setText("Sin comentarios");
             } else {
-                lblCommentsCount.setText(photo.getCommentCount() + " comentarios");
+                lblCommentsCount.setText(photo.commentsCount() + " comentarios");
             }
 
-            if (photo.getImage() != null) {
-                img.setImageBitmap(photo.getImage());
+            Bitmap bm = photo.getHighQuality();
+            if (bm != null) {
+                img.setImageBitmap(bm);
             }
         });
 

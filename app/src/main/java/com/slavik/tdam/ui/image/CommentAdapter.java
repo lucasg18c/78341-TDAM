@@ -60,9 +60,9 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.Viewhold
         }
 
         public void bind(Comment comment) {
-            lblAuthor.setText(comment.getAuthorName());
+            lblAuthor.setText(comment.getAuthor().getUserName());
 
-            Calendar c = comment.getDateCreate();
+            Calendar c = comment.getPosted();
             String date = c.get(Calendar.DAY_OF_MONTH) + "/" + c.get(Calendar.MONTH) + "/" + c.get(Calendar.YEAR);
 
             lblCreated.setText(date);

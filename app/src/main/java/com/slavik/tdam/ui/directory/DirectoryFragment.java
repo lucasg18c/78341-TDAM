@@ -46,7 +46,7 @@ public class DirectoryFragment extends Fragment {
 
         Photoset photoset = ((MainActivity) requireActivity()).getCurrentPhotoset();
 
-        Calendar c = photoset.getDateCreate();
+        Calendar c = photoset.getCreated();
         String date = c.get(Calendar.DAY_OF_MONTH) + "/" + c.get(Calendar.MONTH) + "/" + c.get(Calendar.YEAR);
 
         ((TextView) v.findViewById(R.id.lblTitle)).setText(photoset.getTitle());
@@ -58,9 +58,9 @@ public class DirectoryFragment extends Fragment {
         }
 
         ((TextView) v.findViewById(R.id.lblCreated)).setText("Creada " + date);
-        ((TextView) v.findViewById(R.id.lblViewsCount)).setText(photoset.getCountViews());
-        ((TextView) v.findViewById(R.id.lblCommentsCount)).setText(photoset.getCountComments());
-        ((TextView) v.findViewById(R.id.lblPhotosCount)).setText(photoset.getCountPhotos() + " fotos");
+        ((TextView) v.findViewById(R.id.lblViewsCount)).setText(String.valueOf(photoset.viewsCount()));
+        ((TextView) v.findViewById(R.id.lblCommentsCount)).setText(String.valueOf(photoset.commentsCount()));
+        ((TextView) v.findViewById(R.id.lblPhotosCount)).setText(photoset.getPhotos().size() + " fotos");
 
         v.findViewById(R.id.btnBack).setOnClickListener(
                 b -> requireActivity().getSupportFragmentManager().popBackStack());

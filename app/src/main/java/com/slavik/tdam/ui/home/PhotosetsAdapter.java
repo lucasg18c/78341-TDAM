@@ -1,6 +1,7 @@
 package com.slavik.tdam.ui.home;
 
 import android.annotation.SuppressLint;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -78,12 +79,19 @@ public class PhotosetsAdapter extends RecyclerView.Adapter<PhotosetsAdapter.Phot
 
         public void bind(Photoset photoset) {
             mPhotoset = photoset;
+
+            String photosCount = String.valueOf(photoset.getPhotos().size());
+            Bitmap bm = photoset.getPrimary().getLowQuality();
+
             lblTitle.setText(photoset.getTitle());
-            lblPhotosCount.setText(photoset.getCountPhotos() == 0 ? "Sin" : String.valueOf(photoset.getCountPhotos()));
+            lblPhotosCount.setText(photosCount.equals("0") ? "Sin" : photosCount);
             lblDescription.setText(photoset.getDescription());
-            lblViewsCount.setText(photoset.getCountViews());
-            lblCommentsCount.setText(photoset.getCountComments());
-            imgPhotoset.setImageBitmap(photoset.getPrimaryPhoto());
+            lblViewsCount.setText(String.valueOf(photoset.viewsCount()));
+            lblCommentsCount.setText(String.valueOf(photoset.commentsCount()));
+
+            if (bm != null) {
+                imgPhotoset.setImageBitmap(bm);
+            }
         }
     }
 }

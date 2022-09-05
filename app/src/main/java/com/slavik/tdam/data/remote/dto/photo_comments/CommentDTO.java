@@ -1,6 +1,7 @@
 package com.slavik.tdam.data.remote.dto.photo_comments;
 
 import com.slavik.tdam.model.Comment;
+import com.slavik.tdam.model.User;
 import com.slavik.tdam.util.Convert;
 
 public class CommentDTO {
@@ -17,17 +18,16 @@ public class CommentDTO {
     public String realname;
 
     public Comment toModel() {
-        return new Comment(
-                _content,
-                author,
-                author_is_deleted == 1,
-                authorname,
-                Convert.unixToCalendar(Long.parseLong(datecreate)),
-                iconfarm,
-                iconserver,
-                id,
-                permalink,
-                realname
-        );
+        Comment c = new Comment();
+        c.setId(id);
+        c.setContent(_content);
+        c.setPosted(Convert.unixToCalendar(Long.parseLong(datecreate)));
+
+        User user = new User();
+        user.setId(author);
+        user.setUserName(authorname);
+        c.setAuthor(user);
+
+        return c;
     }
 }

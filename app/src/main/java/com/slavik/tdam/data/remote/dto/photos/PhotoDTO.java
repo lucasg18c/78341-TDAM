@@ -14,16 +14,14 @@ public class PhotoDTO {
     public int isfamily;
 
     public Photo toModel() {
-        return new Photo(
-                id,
-                secret,
-                server,
-                farm,
-                title,
-                isprimary.equals("1"),
-                ispublic == 1,
-                isfriend == 1,
-                isfamily == 1
-        );
+
+        Photo p = new Photo();
+        p.setId(id);
+        p.setSecret(secret);
+        p.setServer(server);
+        p.setTitle(title);
+        p.setPrimary(isprimary.equals("1"));
+
+        return p;
     }
 }

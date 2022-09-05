@@ -2,104 +2,54 @@ package com.slavik.tdam.model;
 
 import android.graphics.Bitmap;
 
-import androidx.annotation.Nullable;
-
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 public class Photo {
+    private List<PhotoContent> content = new ArrayList<>();
+    private List<Comment> comments = new ArrayList<>();
+    private String description;
     private String id;
+    private boolean isPrimary;
+    private Calendar posted;
     private String secret;
     private String server;
-    private int farm;
     private String title;
-    private boolean isPrimary;
-    private boolean isPublic;
-    private boolean isFriend;
-    private boolean isFamily;
+    private long views;
 
-    private long viewsCount;
-    private String description;
-    private Calendar dateUploaded;
-    private long commentCount;
-
-    private Bitmap image;
-
-    private String author;
-
-    public Photo() {
+    public int commentsCount() {
+        return comments.size();
     }
 
-    public Photo(String id,
-                 String secret,
-                 String server,
-                 int farm,
-                 String title,
-                 boolean isPublic,
-                 boolean isFriend,
-                 boolean isFamily,
-                 long viewsCount,
-                 String description,
-                 Calendar dateUploaded,
-                 long commentCount,
-                 String author) {
-        this.id = id;
-        this.secret = secret;
-        this.server = server;
-        this.farm = farm;
-        this.title = title;
-        this.isPublic = isPublic;
-        this.isFriend = isFriend;
-        this.isFamily = isFamily;
-        this.viewsCount = viewsCount;
-        this.description = description;
-        this.dateUploaded = dateUploaded;
-        this.commentCount = commentCount;
-        this.author = author;
+    public Bitmap getLowQuality() {
+        if (content.size() == 0) return null;
+
+        return content.get(0).getBitmap();
     }
 
-    public Photo(String id,
-                 String secret,
-                 String server,
-                 int farm,
-                 String title,
-                 boolean isPrimary,
-                 boolean isPublic,
-                 boolean isFriend,
-                 boolean isFamily) {
-        this.id = id;
-        this.secret = secret;
-        this.server = server;
-        this.farm = farm;
-        this.title = title;
-        this.isPrimary = isPrimary;
-        this.isPublic = isPublic;
-        this.isFriend = isFriend;
-        this.isFamily = isFamily;
+    public Bitmap getHighQuality() {
+        if (content.size() == 0) return null;
+
+        return content.get(content.size() - 1).getBitmap();
     }
 
-    @Override
-    public boolean equals(@Nullable Object obj) {
-        if (!(obj instanceof Photo)) return false;
+    // SETTERS & GETTERS
 
-        Photo o = (Photo) obj;
-
-        return o.getId().equals(id);
+    public List<PhotoContent> getContent() {
+        return content;
     }
 
-    public Bitmap getImage() {
-        return image;
+    public void setContent(List<PhotoContent> content) {
+        this.content = content;
     }
 
-    public void setImage(Bitmap image) {
-        this.image = image;
+    public List<Comment> getComments() {
+        return comments;
     }
 
-    public long getViewsCount() {
-        return viewsCount;
-    }
-
-    public void setViewsCount(long viewsCount) {
-        this.viewsCount = viewsCount;
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
     }
 
     public String getDescription() {
@@ -110,28 +60,28 @@ public class Photo {
         this.description = description;
     }
 
-    public Calendar getDateUploaded() {
-        return dateUploaded;
-    }
-
-    public void setDateUploaded(Calendar dateUploaded) {
-        this.dateUploaded = dateUploaded;
-    }
-
-    public long getCommentCount() {
-        return commentCount;
-    }
-
-    public void setCommentCount(long commentCount) {
-        this.commentCount = commentCount;
-    }
-
     public String getId() {
         return id;
     }
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public boolean isPrimary() {
+        return isPrimary;
+    }
+
+    public void setPrimary(boolean primary) {
+        isPrimary = primary;
+    }
+
+    public Calendar getPosted() {
+        return posted;
+    }
+
+    public void setPosted(Calendar posted) {
+        this.posted = posted;
     }
 
     public String getSecret() {
@@ -150,14 +100,6 @@ public class Photo {
         this.server = server;
     }
 
-    public int getFarm() {
-        return farm;
-    }
-
-    public void setFarm(int farm) {
-        this.farm = farm;
-    }
-
     public String getTitle() {
         return title;
     }
@@ -166,43 +108,12 @@ public class Photo {
         this.title = title;
     }
 
-    public boolean isPrimary() {
-        return isPrimary;
+    public long getViews() {
+        return views;
     }
 
-    public void setPrimary(boolean primary) {
-        isPrimary = primary;
+    public void setViews(long views) {
+        this.views = views;
     }
 
-    public boolean isPublic() {
-        return isPublic;
-    }
-
-    public void setPublic(boolean aPublic) {
-        isPublic = aPublic;
-    }
-
-    public boolean isFriend() {
-        return isFriend;
-    }
-
-    public void setFriend(boolean friend) {
-        isFriend = friend;
-    }
-
-    public boolean isFamily() {
-        return isFamily;
-    }
-
-    public void setFamily(boolean family) {
-        isFamily = family;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
 }

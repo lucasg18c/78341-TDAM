@@ -30,21 +30,14 @@ public class HomeViewModel extends ViewModel {
     }
 
     public void fetchPhotosets() {
-        repository.getPhotosets((data, isSuccess) -> {
-            if (isSuccess) {
-                List<Photoset> ps = _photosets.getValue();
-
-                assert ps != null;
-                int i = ps.indexOf(data);
-
-                if (i == -1) {
-                    ps.add(data);
-                } else {
-                    ps.set(i, data);
-                }
-                _photosets.postValue(ps);
-
+        repository.getPhotosets(false, (data, isSuccess) -> {
+            if (!isSuccess) {
+                // mostrar snack de error
+                // ... todo
+                return;
             }
+
+            _photosets.postValue(data);
         });
     }
 }
