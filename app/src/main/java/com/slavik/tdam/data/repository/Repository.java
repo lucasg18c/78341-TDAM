@@ -1,5 +1,10 @@
 package com.slavik.tdam.data.repository;
 
+import android.content.ContentResolver;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.provider.MediaStore;
+
 import com.android.volley.RequestQueue;
 import com.slavik.tdam.data.local.DatabaseTDAM;
 import com.slavik.tdam.data.local.entities.PhotoEntity;
@@ -14,6 +19,7 @@ import com.slavik.tdam.model.PhotoSize;
 import com.slavik.tdam.model.Photoset;
 import com.slavik.tdam.util.Response;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,8 +34,9 @@ public class Repository implements IRepository {
 
     // Database
     private final DatabaseTDAM db;
+    private final ContentResolver contentResolver;
 
-    public Repository(RequestQueue queue, DatabaseTDAM db) {
+    public Repository(RequestQueue queue, DatabaseTDAM db, ContentResolver contentResolver) {
         // Init services
         photosetService = new PhotosetService(queue);
         imageService = new ImageService(queue);
@@ -39,6 +46,8 @@ public class Repository implements IRepository {
 
         // Database
         this.db = db;
+        this.contentResolver = contentResolver;
+
     }
 
     @Override
@@ -145,7 +154,28 @@ public class Repository implements IRepository {
         photosets.clear();
 
         for (PhotosetWithPhotos p : res) {
-            photosets.add(p.toModel());
+            Photoset photoset = p.toModel();
+
+            String primary = p.photoset.primary;
+            if (primary != null && primary.length() > 0) {
+                try {
+                    Uri uri = Uri.parse(primary);
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(contentResolver, uri);
+
+                    if (bitmap != null) {
+
+                        PhotoContent content = new PhotoContent();
+                        content.setBitmap(bitmap);
+                        content.setAvailable(true);
+                        content.setSize(PhotoSize.w);
+                        photoset.getPrimary().getContent().add(content);
+                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            photosets.add(photoset);
         }
     }
 
@@ -153,13 +183,41 @@ public class Repository implements IRepository {
         for (Photoset ps : photosets) {
             PhotosetEntity pse = new PhotosetEntity(ps);
 
+            Uri uri = savePhoto(ps.getPrimary());
+
+            if (uri != null) {
+                pse.primary = uri.toString();
+            }
+
             db.photosetDao().insertPhotoset(pse);
+
 
             for (PhotoEntity p : pse.photos) {
                 db.photoDao().insertPhoto(p);
             }
+
+        }
+    }
+
+    private Uri savePhoto(Photo photo) {
+        if (photo == null) {
+            return null;
         }
 
+        Bitmap bm = photo.getHighQuality();
+
+        if (bm == null) {
+            return null;
+        }
+
+        String path = MediaStore.Images.Media.insertImage(
+                contentResolver,
+                bm,
+                photo.getTitle(),
+                photo.getDescription() == null ? "" : photo.getDescription()
+        );
+
+        return Uri.parse(path);
     }
 
     @Override

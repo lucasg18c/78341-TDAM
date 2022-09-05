@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
                 .build();
 
         queue = Volley.newRequestQueue(this);
-        repository = new Repository(queue, db);
+        repository = new Repository(queue, db, getContentResolver());
 //        repository = new MockRepository();
 
         if (savedInstanceState == null) {

@@ -20,6 +20,8 @@ public class PhotosetEntity {
     public long created;
     public String description;
     public String title;
+    public String primary;
+
     @Ignore
     public List<PhotoEntity> photos = new ArrayList<>();
 
