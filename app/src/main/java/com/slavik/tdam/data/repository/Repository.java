@@ -1,6 +1,10 @@
 package com.slavik.tdam.data.repository;
 
 import com.android.volley.RequestQueue;
+import com.slavik.tdam.data.local.DatabaseTDAM;
+import com.slavik.tdam.data.local.entities.PhotoEntity;
+import com.slavik.tdam.data.local.entities.PhotosetEntity;
+import com.slavik.tdam.data.local.entities.PhotosetWithPhotos;
 import com.slavik.tdam.data.remote.services.ImageService;
 import com.slavik.tdam.data.remote.services.PhotosetService;
 import com.slavik.tdam.model.Comment;
@@ -22,13 +26,19 @@ public class Repository implements IRepository {
     // Data in memory
     private final List<Photoset> photosets;
 
-    public Repository(RequestQueue queue) {
+    // Database
+    private final DatabaseTDAM db;
+
+    public Repository(RequestQueue queue, DatabaseTDAM db) {
         // Init services
         photosetService = new PhotosetService(queue);
         imageService = new ImageService(queue);
 
         // Init data
         photosets = new ArrayList<>();
+
+        // Database
+        this.db = db;
     }
 
     @Override
@@ -42,12 +52,19 @@ public class Repository implements IRepository {
         }
 
         // Buscar en DB Local con Room
-        // ... todo
+        getSavedPhotosets();
+        if (photosets.size() > 0) {
+            response.onResponse(photosets, true);
+            if (forceCache) {
+                return;
+            }
+        }
 
         // Consultar API
         photosetService.getPhotosets((res, success) -> {
             if (!success) {
                 response.onResponse(null, false);
+                return;
             }
 
             photosets.clear();
@@ -84,8 +101,8 @@ public class Repository implements IRepository {
                             // Envía datos al front
                             response.onResponse(photosets, true);
 
-                            // Guarda en caché con ROOM
-                            // ... todo
+                            // Guarda en DB local con ROOM
+                            savePhotosets();
 
                             // Si es primaria del photoset, descarga su preview
                             if (photo.isPrimary()) {
@@ -112,7 +129,7 @@ public class Repository implements IRepository {
                                             response.onResponse(photosets, true);
 
                                             // Guarda en caché con ROOM
-                                            // ... todo
+                                            savePhotosets();
                                         });
                             }
                         });
@@ -120,6 +137,28 @@ public class Repository implements IRepository {
                 });
             }
         });
+
+    }
+
+    private void getSavedPhotosets() {
+        List<PhotosetWithPhotos> res = db.photosetDao().getPhotosets();
+        photosets.clear();
+
+        for (PhotosetWithPhotos p : res) {
+            photosets.add(p.toModel());
+        }
+    }
+
+    private void savePhotosets() {
+        for (Photoset ps : photosets) {
+            PhotosetEntity pse = new PhotosetEntity(ps);
+
+            db.photosetDao().insertPhotoset(pse);
+
+            for (PhotoEntity p : pse.photos) {
+                db.photoDao().insertPhoto(p);
+            }
+        }
 
     }
 

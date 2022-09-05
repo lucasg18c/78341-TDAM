@@ -3,10 +3,12 @@ package com.slavik.tdam.ui;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.room.Room;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.slavik.tdam.R;
+import com.slavik.tdam.data.local.DatabaseTDAM;
 import com.slavik.tdam.data.repository.IRepository;
 import com.slavik.tdam.data.repository.Repository;
 import com.slavik.tdam.model.Photo;
@@ -24,8 +26,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        DatabaseTDAM db = Room.databaseBuilder(
+                getApplicationContext(),
+                DatabaseTDAM.class,
+                "db-tdam")
+                .allowMainThreadQueries()
+                .build();
+
         queue = Volley.newRequestQueue(this);
-        repository = new Repository(queue);
+        repository = new Repository(queue, db);
 //        repository = new MockRepository();
 
         if (savedInstanceState == null) {

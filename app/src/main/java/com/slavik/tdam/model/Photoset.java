@@ -35,6 +35,14 @@ public class Photoset {
         return sum;
     }
 
+    public void addPhoto(Photo photo) {
+        if (photos == null) {
+            photos = new ArrayList<>();
+        }
+
+        photos.add(photo);
+    }
+
     // SETTERS & GETTERS
 
     public Calendar getCreated() {
