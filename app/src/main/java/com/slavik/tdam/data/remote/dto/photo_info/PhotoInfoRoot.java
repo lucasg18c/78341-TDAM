@@ -1,9 +1,9 @@
 package com.slavik.tdam.data.remote.dto.photo_info;
 
+import com.slavik.tdam.model.Comment;
 import com.slavik.tdam.model.Photo;
 import com.slavik.tdam.util.Convert;
-
-import java.util.ArrayList;
+import com.slavik.tdam.util.ListUtil;
 
 public class PhotoInfoRoot {
     public PhotoDTO photo;
@@ -19,7 +19,7 @@ public class PhotoInfoRoot {
         p.setPrimary(photo.visibility.isfamily == 1);
         p.setPosted(Convert.unixToCalendar(Long.parseLong(photo.dateuploaded)));
         p.setViews(Integer.parseInt(photo.views));
-        p.setComments(new ArrayList<>(Integer.parseInt(photo.comments._content)));
+        p.setComments(new ListUtil<Comment>().emptyArray(Integer.parseInt(photo.comments._content)));
         p.setDescription(photo.description._content);
 
         return p;

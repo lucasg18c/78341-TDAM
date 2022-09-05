@@ -1,7 +1,10 @@
 package com.slavik.tdam.data.remote.dto.photosets;
 
+import com.slavik.tdam.model.Comment;
+import com.slavik.tdam.model.Photo;
 import com.slavik.tdam.model.Photoset;
 import com.slavik.tdam.util.Convert;
+import com.slavik.tdam.util.ListUtil;
 
 import java.util.ArrayList;
 
@@ -43,7 +46,7 @@ public class PhotosetDTO {
         ps.setCreated(Convert.unixToCalendar(Long.parseLong(date_create)));
         ps.setTitle(title._content);
         ps.setDescription(description._content);
-        ps.setPhotos(new ArrayList<>(count_photos));
+        ps.setPhotos(new ListUtil<Photo>().emptyArray(count_photos));
 
         return ps;
     }
