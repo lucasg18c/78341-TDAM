@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.slavik.tdam.R;
+import com.slavik.tdam.model.Photo;
 import com.slavik.tdam.model.Photoset;
 
 import java.util.ArrayList;
@@ -81,7 +82,13 @@ public class PhotosetsAdapter extends RecyclerView.Adapter<PhotosetsAdapter.Phot
             mPhotoset = photoset;
 
             String photosCount = String.valueOf(photoset.getPhotos().size());
-            Bitmap bm = photoset.getPrimary().getLowQuality();
+            Photo primary = photoset.getPrimary();
+            if (primary != null){
+                    Bitmap bm = primary.getLowQuality();
+                if (bm != null) {
+                    imgPhotoset.setImageBitmap(bm);
+                }
+            }
 
             lblTitle.setText(photoset.getTitle());
             lblPhotosCount.setText(photosCount.equals("0") ? "Sin" : photosCount);
@@ -89,9 +96,6 @@ public class PhotosetsAdapter extends RecyclerView.Adapter<PhotosetsAdapter.Phot
             lblViewsCount.setText(String.valueOf(photoset.viewsCount()));
             lblCommentsCount.setText(String.valueOf(photoset.commentsCount()));
 
-            if (bm != null) {
-                imgPhotoset.setImageBitmap(bm);
-            }
         }
     }
 }

@@ -21,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="160dp"
             android:scaleType="fitXY"
-            android:src="@drawable/cacatua"
+            android:src="@color/shimmer"
             android:contentDescription="@string/photo" />
 
         <LinearLayout

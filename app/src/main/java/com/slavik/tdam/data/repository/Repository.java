@@ -218,8 +218,12 @@ public class Repository implements IRepository {
             return;
         }
 
+        PhotoEntity saved = db.photoDao().getPhotoById(photo.getId());
+        if (saved != null) {
+            photo.setLocalPath(saved.localPath);
+        }
+
         if (content != null) {
-            PhotoEntity saved = db.photoDao().getPhotoById(photo.getId());
 
             if (saved == null || !exists(saved.localPath)) {
                 photo.setLocalPath(saveBitmap(photo, content));
