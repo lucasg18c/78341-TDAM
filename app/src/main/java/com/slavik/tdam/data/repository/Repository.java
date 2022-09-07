@@ -126,7 +126,7 @@ public class Repository implements IRepository {
                                         photo.getId(),
                                         photo.getServer(),
                                         photo.getSecret(),
-                                        ImageService.ImageSize.w,
+                                        PhotoSize.w,
                                         (bitmap, sBitmap) -> {
 
                                             // Retorna que hubo un error
@@ -193,26 +193,6 @@ public class Repository implements IRepository {
         }
     }
 
-//    private void savePhotosets() {
-//        for (Photoset ps : photosets) {
-//            PhotosetEntity pse = new PhotosetEntity(ps);
-//
-//            Uri uri = savePhoto(ps.getPrimary());
-//
-//            if (uri != null) {
-//                pse.primary = uri.toString();
-//            }
-//
-//            db.photosetDao().insertPhotoset(pse);
-//
-//
-//            for (PhotoEntity p : pse.photos) {
-//                db.photoDao().insertPhoto(p);
-//            }
-//
-//        }
-//    }
-
     private void savePhoto(Photo photo, Photoset photoset, PhotoContent content) {
         if (photo == null) {
             return;
@@ -266,88 +246,78 @@ public class Repository implements IRepository {
     }
 
     @Override
-    public void getPhoto(Photo photo, Response<Photo> response) {
-        imageService.getImage(photo.getId(), photo.getServer(), photo.getSecret(), ImageService.ImageSize.w, (data, isSuccess) -> {
-            if (isSuccess) {
-                PhotoContent content = new PhotoContent();
-                content.setSize(PhotoSize.w);
-                content.setAvailable(true);
-                content.setBitmap(data);
-                photo.getContent().add(content);
-                response.onResponse(photo, true);
+    public void getPhoto(boolean forceCache, Photo photo, PhotoSize size, Response<Photo> response) {
+
+        Photoset owner = null;
+        for (Photoset ps : photosets) {
+            for (Photo p : ps.getPhotos()) {
+                if (p.getId().equals(photo.getId())) {
+                    owner = ps;
+                    for (PhotoContent pc : p.getContent()) {
+                        if (pc.getSize() == size && pc.getBitmap() != null) {
+                            response.onResponse(photo, true);
+                            if (forceCache) {
+                                return;
+                            }
+                        }
+                    }
+                    break;
+                }
             }
-        });
+        }
+
+        // todo: va a generar bugs ya que no controla la resolución de la foto
+        PhotoEntity pe = db.photoDao().getPhotoById(photo.getId());
+        if (pe != null && exists(pe.localPath)) {
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(
+                        contentResolver,
+                        Uri.parse(photo.getLocalPath())
+                );
+
+                if (bitmap != null) {
+
+                    PhotoContent content = new PhotoContent();
+                    content.setBitmap(bitmap);
+                    content.setAvailable(true);
+                    content.setSize(size);
+                    photo.getContent().add(content);
+
+                    response.onResponse(photo, true);
+
+                    if (forceCache) {
+                        return;
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        Photoset finalOwner = owner;
+        imageService.getImage(
+                photo.getId(),
+                photo.getServer(),
+                photo.getSecret(),
+                size,
+                (data, isSuccess) -> {
+                    if (isSuccess) {
+                        PhotoContent content = new PhotoContent();
+                        content.setSize(size);
+                        content.setAvailable(true);
+                        content.setBitmap(data);
+                        photo.getContent().add(content);
+                        response.onResponse(photo, true);
+
+                        if (finalOwner != null) {
+                            savePhoto(photo, finalOwner, content);
+                        }
+                    }
+                });
     }
 
     @Override
     public void getComments(Photo photo, Response<List<Comment>> response) {
 
     }
-//
-//    @Override
-//    public void getPhotosets(Response<Photoset> response) {
-//        photosetService.getPhotosets((data, isSuccess) -> {
-//            for (Photoset photoset : data) {
-//                imageService.getImage(
-//                        photoset.getPrimary(),
-//                        photoset.getServer(),
-//                        photoset.getSecret(),
-//                        ImageService.ImageSize.w,
-//                        (data1, isSuccess1) -> {
-//                            photoset.setPrimaryPhoto(data1);
-//                            response.onResponse(photoset, true);
-//                        });
-//            }
-//        });
-//    }
-//
-//    @Override
-//    public void getPhotos(String photosetID, Response<Photo> response) {
-//        photosetService.getImages(photosetID, (data, isSuccess) ->
-//        {
-//            if (!isSuccess) {
-//                response.onResponse(null, false);
-//                return;
-//            }
-//
-//            for (Photo p : data) {
-//
-//                imageService.getImage(p.getId(),
-//                        p.getServer(),
-//                        p.getSecret(),
-//                        ImageService.ImageSize.w,
-//                        (data1, isSuccess1) -> {
-//                            p.setImage(data1);
-//                            response.onResponse(p, true);
-//                        });
-//            }
-//        });
-//    }
-//
-//    @Override
-//    public void getPhoto(Photo photo, Response<Photo> response) {
-//        imageService.getInfo(photo.getId(), (data, isSuccess) -> {
-//            if (!isSuccess) return;
-//
-//            response.onResponse(data, true);
-//
-//            imageService.getImage(data.getId(),
-//                    data.getServer(),
-//                    data.getSecret(),
-//                    ImageService.ImageSize.b,
-//                    (data1, isSuccess1) -> {
-//                        data.setImage(data1);
-//                        response.onResponse(data, true);
-//                    });
-//        });
-//    }
-//
-//    @Override
-//    public void getComments(Photo photo, Response<List<Comment>> response) {
-//        imageService.getComments(photo.getId(), (data, isSuccess) -> {
-//            if (!isSuccess) return;
-//
-//            response.onResponse(data, true);
-//        });
-//    }
 }

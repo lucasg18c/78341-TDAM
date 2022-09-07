@@ -12,6 +12,7 @@ import com.slavik.tdam.data.remote.dto.photo_comments.PhotoCommentsRoot;
 import com.slavik.tdam.data.remote.dto.photo_info.PhotoInfoRoot;
 import com.slavik.tdam.model.Comment;
 import com.slavik.tdam.model.Photo;
+import com.slavik.tdam.model.PhotoSize;
 import com.slavik.tdam.util.Response;
 
 import java.util.List;
@@ -49,7 +50,7 @@ public class ImageService {
         mQueue.add(stringRequest);
     }
 
-    public void getImage(String photoID, String serverID, String secret, ImageSize size, Response<Bitmap> onResponse) {
+    public void getImage(String photoID, String serverID, String secret, PhotoSize size, Response<Bitmap> onResponse) {
         String path = BASE_IMAGE_URL
                 + serverID + "/" + photoID + "_" + secret + "_" + size.toString() + ".jpg";
 
@@ -58,9 +59,5 @@ public class ImageService {
                 0, 0, ImageView.ScaleType.CENTER, Bitmap.Config.RGB_565,
                 error -> onResponse.onResponse(null, false));
         mQueue.add(stringRequest);
-    }
-
-    public enum ImageSize {
-        s, q, t, m, n, w, mid, z, c, b, h, k, _3k, _4k, _5k, _6k, o
     }
 }

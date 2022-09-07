@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.slavik.tdam.data.repository.IRepository;
 import com.slavik.tdam.model.Photo;
+import com.slavik.tdam.model.PhotoSize;
 import com.slavik.tdam.model.Photoset;
 import com.slavik.tdam.ui.MainActivity;
 
@@ -33,7 +34,7 @@ public class DirectoryViewModel extends ViewModel {
 
     private void fetchPhotos() {
         for (Photo p : currentPhotoset.getPhotos()) {
-            repository.getPhoto(p, (res, success) -> {
+            repository.getPhoto(true, p, PhotoSize.w, (res, success) -> {
                 List<Photo> photos = _photos.getValue();
 
                 for (int i = 0; i < photos.size(); i++) {

@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel;
 import com.slavik.tdam.data.repository.IRepository;
 import com.slavik.tdam.model.Comment;
 import com.slavik.tdam.model.Photo;
+import com.slavik.tdam.model.PhotoSize;
 import com.slavik.tdam.ui.MainActivity;
 
 import java.util.ArrayList;
@@ -36,7 +37,7 @@ public class ImageViewModel extends ViewModel {
     }
 
     public void fetchInfo() {
-        repository.getPhoto(currentPhoto, (data, isSuccess) -> {
+        repository.getPhoto(false, currentPhoto, PhotoSize.h, (data, isSuccess) -> {
             if (!isSuccess) return;
             _photo.postValue(data);
         });
