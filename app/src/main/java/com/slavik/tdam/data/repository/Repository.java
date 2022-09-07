@@ -7,7 +7,9 @@ import android.provider.MediaStore;
 
 import com.android.volley.RequestQueue;
 import com.slavik.tdam.data.local.DatabaseTDAM;
+import com.slavik.tdam.data.local.entities.CommentEntity;
 import com.slavik.tdam.data.local.entities.PhotoEntity;
+import com.slavik.tdam.data.local.entities.PhotoWithComments;
 import com.slavik.tdam.data.local.entities.PhotosetEntity;
 import com.slavik.tdam.data.local.entities.PhotosetWithPhotos;
 import com.slavik.tdam.data.remote.services.ImageService;
@@ -251,6 +253,7 @@ public class Repository implements IRepository {
         Photoset owner = null;
         for (Photoset ps : photosets) {
             for (Photo p : ps.getPhotos()) {
+                if (p == null) continue;
                 if (p.getId().equals(photo.getId())) {
                     owner = ps;
                     for (PhotoContent pc : p.getContent()) {
@@ -319,5 +322,21 @@ public class Repository implements IRepository {
     @Override
     public void getComments(Photo photo, Response<List<Comment>> response) {
 
+        PhotoWithComments photoWithComments = db.photoDao().getPhotoWithComments(photo.getId());
+        if (photoWithComments != null) {
+            Photo p = photoWithComments.toModel();
+            photo.setComments(p.getComments());
+            response.onResponse(p.getComments(), true);
+        }
+
+        imageService.getComments(photo.getId(), (res, success) -> {
+            response.onResponse(res, success);
+
+            if (res != null) {
+                for (Comment c : res) {
+                    db.commentDao().insert(new CommentEntity(c, photo));
+                }
+            }
+        });
     }
 }

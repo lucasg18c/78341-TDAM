@@ -127,6 +127,14 @@ public class ImageFragment extends Fragment {
         });
 
         mViewModel.comments().observe(getViewLifecycleOwner(),
-                comments -> adapter.setComments(comments));
+                comments -> {
+                    adapter.setComments(comments);
+                    divider.setVisibility(comments.size() == 0 ? View.GONE : View.VISIBLE);
+                    if (comments.size()  == 0) {
+                        lblCommentsCount.setText("Sin comentarios");
+                    } else {
+                        lblCommentsCount.setText(comments.size()  + " comentarios");
+                    }
+                });
     }
 }
