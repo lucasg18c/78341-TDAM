@@ -83,6 +83,7 @@ public class PhotosetsAdapter extends RecyclerView.Adapter<PhotosetsAdapter.Phot
 
             String photosCount = String.valueOf(photoset.getPhotos().size());
             Photo primary = photoset.getPrimary();
+
             if (primary != null){
                     Bitmap bm = primary.getLowQuality();
                 if (bm != null) {

@@ -13,6 +13,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.slavik.tdam.R;
 import com.slavik.tdam.model.Photo;
@@ -26,6 +27,7 @@ public class DirectoryFragment extends Fragment {
 
     private DirectoryViewModel mViewModel;
     private PhotoAdapter adapter;
+    private SwipeRefreshLayout strDirectory;
 
     public static DirectoryFragment newInstance() {
         return new DirectoryFragment();
@@ -35,6 +37,8 @@ public class DirectoryFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_directory, container, false);
+
+        strDirectory = v.findViewById(R.id.strDirectory);
 
         RecyclerView rv = v.findViewById(R.id.listPhotos);
         adapter = new PhotoAdapter(this);
@@ -80,7 +84,12 @@ public class DirectoryFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mViewModel.photos()
-                .observe(getViewLifecycleOwner(), photos -> adapter.setPhotos(photos));
+                .observe(getViewLifecycleOwner(), photos -> {
+                    adapter.setPhotos(photos);
+                    strDirectory.setRefreshing(false);
+                });
+
+        strDirectory.setOnRefreshListener(() -> mViewModel.fetchPhotos());
     }
 
     public void onClickPhoto(Photo photo) {

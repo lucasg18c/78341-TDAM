@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.slavik.tdam.R;
 import com.slavik.tdam.model.Photo;
@@ -35,6 +36,7 @@ public class ImageFragment extends Fragment {
     private CommentAdapter adapter;
     private View divider;
     private Photo currentPhoto;
+    private SwipeRefreshLayout strPhoto;
 
     public static ImageFragment newInstance() {
         return new ImageFragment();
@@ -55,6 +57,7 @@ public class ImageFragment extends Fragment {
         lblDescription = v.findViewById(R.id.lblDescription);
         lblCommentsCount = v.findViewById(R.id.lblCommentsCount);
         divider = v.findViewById(R.id.dividerComments);
+        strPhoto = v.findViewById(R.id.strPhoto);
 
         img = v.findViewById(R.id.imgPhoto);
         Bitmap bm = photo.getLowQuality();
@@ -101,6 +104,7 @@ public class ImageFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         mViewModel.photo().observe(getViewLifecycleOwner(), photo -> {
+            strPhoto.setRefreshing(false);
             currentPhoto = photo;
 //            lblAuthor.setText("Por " + photo.getAuthor()); todo
 
@@ -128,6 +132,7 @@ public class ImageFragment extends Fragment {
 
         mViewModel.comments().observe(getViewLifecycleOwner(),
                 comments -> {
+                    strPhoto.setRefreshing(false);
                     adapter.setComments(comments);
                     divider.setVisibility(comments.size() == 0 ? View.GONE : View.VISIBLE);
                     if (comments.size()  == 0) {
@@ -136,5 +141,7 @@ public class ImageFragment extends Fragment {
                         lblCommentsCount.setText(comments.size()  + " comentarios");
                     }
                 });
+
+        strPhoto.setOnRefreshListener(() -> mViewModel.fetchInfo());
     }
 }

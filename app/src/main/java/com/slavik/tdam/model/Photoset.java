@@ -14,6 +14,7 @@ public class Photoset {
     public long commentsCount() {
         long sum = 0;
         for (Photo p : photos) {
+            if (p == null) continue;
             sum += p.commentsCount();
         }
         return sum;
@@ -21,7 +22,7 @@ public class Photoset {
 
     public Photo getPrimary() {
         for (Photo p : photos) {
-            if (p.isPrimary())
+            if (p != null  && p.isPrimary())
                 return p;
         }
         return null;
@@ -30,6 +31,7 @@ public class Photoset {
     public long viewsCount() {
         long sum = 0;
         for (Photo p : photos) {
+            if (p == null) continue;
             sum += p.getViews();
         }
         return sum;

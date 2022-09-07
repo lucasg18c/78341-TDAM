@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.slavik.tdam.R;
 import com.slavik.tdam.model.Photoset;
@@ -22,6 +23,7 @@ public class HomeFragment extends Fragment {
 
     private HomeViewModel mViewModel;
     private PhotosetsAdapter photosetsAdapter;
+    private SwipeRefreshLayout strHome;
 
     public static HomeFragment newInstance() {
         return new HomeFragment();
@@ -34,6 +36,8 @@ public class HomeFragment extends Fragment {
 
         LinearLayoutManager lm = new LinearLayoutManager(requireContext());
         photosetsAdapter = new PhotosetsAdapter(this);
+
+        strHome = v.findViewById(R.id.strHome);
 
         RecyclerView rv = v.findViewById(R.id.listPhotosets);
         rv.setLayoutManager(lm);
@@ -54,7 +58,12 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         mViewModel.photosets().observe(getViewLifecycleOwner(),
-                p -> photosetsAdapter.setPhotosets(p));
+                p -> {
+                    photosetsAdapter.setPhotosets(p);
+                    strHome.setRefreshing(false);
+                });
+
+        strHome.setOnRefreshListener(() -> mViewModel.fetchPhotosets());
     }
 
     public void onPhotosetClicked(Photoset photoset) {

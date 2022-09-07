@@ -37,7 +37,7 @@ public class ImageViewModel extends ViewModel {
     }
 
     public void fetchInfo() {
-        repository.getPhoto(false, currentPhoto, PhotoSize.h, (data, isSuccess) -> {
+        repository.getPhoto(false, currentPhoto, PhotoSize.b, (data, isSuccess) -> {
             if (!isSuccess) return;
             _photo.postValue(data);
         });
