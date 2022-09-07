@@ -23,6 +23,7 @@ public class PhotoEntity {
     public String server;
     public String title;
     public long views;
+    public String localPath;
 
     public PhotoEntity() {
     }
@@ -43,6 +44,7 @@ public class PhotoEntity {
         server = p.getServer();
         title = p.getTitle();
         views = p.getViews();
+        localPath = p.getLocalPath();
     }
 
     public Photo toModel() {
@@ -57,6 +59,7 @@ public class PhotoEntity {
         p.setViews(views);
         //p.setComments(new ArrayList<>(Integer.parseInt(photo.comments._content)));
         p.setDescription(description);
+        p.setLocalPath(localPath);
 
         return p;
     }

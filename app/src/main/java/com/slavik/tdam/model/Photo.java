@@ -17,6 +17,7 @@ public class Photo {
     private String server;
     private String title;
     private long views;
+    private String localPath;
 
     public int commentsCount() {
         return comments.size();
@@ -116,4 +117,11 @@ public class Photo {
         this.views = views;
     }
 
+    public String getLocalPath() {
+        return localPath;
+    }
+
+    public void setLocalPath(String localPath) {
+        this.localPath = localPath;
+    }
 }

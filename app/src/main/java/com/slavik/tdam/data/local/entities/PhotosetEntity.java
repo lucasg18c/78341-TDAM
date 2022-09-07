@@ -34,10 +34,10 @@ public class PhotosetEntity {
         description = ps.getDescription();
         title = ps.getTitle();
 
-        for (Photo p : ps.getPhotos()) {
-            if (p.getId().length() > 0) {
-                photos.add(new PhotoEntity(p, ps.getId()));
-            }
-        }
+//        for (Photo p : ps.getPhotos()) {
+//            if (p != null) {
+//                photos.add(new PhotoEntity(p, ps.getId()));
+//            }
+//        }
     }
 }

@@ -27,24 +27,23 @@ public class DirectoryViewModel extends ViewModel {
         MainActivity activity = (MainActivity) fragment.requireActivity();
         repository = activity.getRepository();
         currentPhotoset = activity.getCurrentPhotoset();
+        _photos.postValue(currentPhotoset.getPhotos());
         fetchPhotos();
     }
 
     private void fetchPhotos() {
-        repository.getPhotos(currentPhotoset.getId(), (data, isSuccess) -> {
+        for (Photo p : currentPhotoset.getPhotos()) {
+            repository.getPhoto(p, (res, success) -> {
+                List<Photo> photos = _photos.getValue();
 
-            List<Photo> photosList = _photos.getValue();
-
-            assert photosList != null;
-            int i = photosList.indexOf(data);
-
-            if (i == -1) {
-                photosList.add(data);
-            } else {
-                photosList.set(i, data);
-            }
-
-            _photos.postValue(photosList);
-        });
+                for (int i = 0; i < photos.size(); i++) {
+                    if (photos.get(i).getId().equals(res.getId())) {
+                        photos.set(i, res);
+                        _photos.postValue(photos);
+                        return;
+                    }
+                }
+            });
+        }
     }
 }
