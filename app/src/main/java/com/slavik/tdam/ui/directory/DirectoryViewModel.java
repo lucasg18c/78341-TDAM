@@ -20,6 +20,14 @@ public class DirectoryViewModel extends ViewModel {
     private IRepository repository;
     private Photoset currentPhotoset;
 
+    public void setOrderByName(boolean orderByName) {
+
+    }
+
+    public void setOrderAsc(boolean orderAsc) {
+
+    }
+
     public LiveData<List<Photo>> photos() {
         return _photos;
     }

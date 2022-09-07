@@ -1,5 +1,6 @@
 package com.slavik.tdam.ui.directory;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.google.android.material.chip.Chip;
 import com.slavik.tdam.R;
 import com.slavik.tdam.model.Photo;
 import com.slavik.tdam.model.Photoset;
@@ -28,6 +30,8 @@ public class DirectoryFragment extends Fragment {
     private DirectoryViewModel mViewModel;
     private PhotoAdapter adapter;
     private SwipeRefreshLayout strDirectory;
+    private Chip chipOrderBy;
+    private Chip chipOrderType;
 
     public static DirectoryFragment newInstance() {
         return new DirectoryFragment();
@@ -39,6 +43,8 @@ public class DirectoryFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_directory, container, false);
 
         strDirectory = v.findViewById(R.id.strDirectory);
+        chipOrderBy = v.findViewById(R.id.chipOrderBy);
+        chipOrderType = v.findViewById(R.id.chipOrderType);
 
         RecyclerView rv = v.findViewById(R.id.listPhotos);
         adapter = new PhotoAdapter(this);
@@ -80,9 +86,28 @@ public class DirectoryFragment extends Fragment {
         mViewModel.init(this);
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        chipOrderBy.setOnCheckedChangeListener((compoundButton, b) -> {
+            mViewModel.setOrderByName(b);
+            chipOrderBy.setText(b ? "Nombre" : "Fecha");
+            chipOrderBy.setChipIcon(getResources().getDrawable(b
+                    ? R.drawable.ic_bookmark
+                    : R.drawable.ic_calendar));
+        });
+
+        chipOrderType.setOnCheckedChangeListener((compoundButton, b) -> {
+            mViewModel.setOrderAsc(b);
+            chipOrderType.setText(b ? "Ascendente" : "Descendente");
+            chipOrderType.setChipBackgroundColorResource(b
+                    ? R.color.mid_blue
+                    : R.color.light_blue);
+            chipOrderType.setChipStrokeWidth(b ? 0 : .5f);
+        });
+
         mViewModel.photos()
                 .observe(getViewLifecycleOwner(), photos -> {
                     adapter.setPhotos(photos);
