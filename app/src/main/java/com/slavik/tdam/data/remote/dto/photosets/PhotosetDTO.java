@@ -7,6 +7,7 @@ import com.slavik.tdam.util.Convert;
 import com.slavik.tdam.util.ListUtil;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class PhotosetDTO {
     public String id;
@@ -41,9 +42,12 @@ public class PhotosetDTO {
     public Photoset toModel() {
 
         Photoset ps = new Photoset();
-
         ps.setId(id);
-        ps.setCreated(Convert.unixToCalendar(Long.parseLong(date_create)));
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(Long.parseLong(date_create) * 1000);
+
+        ps.setCreated(cal);
         ps.setTitle(title._content);
         ps.setDescription(description._content);
         ps.setPhotos(new ListUtil<Photo>().emptyArray(count_photos));

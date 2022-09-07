@@ -112,6 +112,7 @@ public class DirectoryFragment extends Fragment {
                 .observe(getViewLifecycleOwner(), photos -> {
                     adapter.setPhotos(photos);
                     strDirectory.setRefreshing(false);
+                    //mViewModel.order();
                 });
 
         strDirectory.setOnRefreshListener(() -> mViewModel.fetchPhotos());

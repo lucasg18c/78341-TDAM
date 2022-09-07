@@ -5,6 +5,8 @@ import com.slavik.tdam.model.Photo;
 import com.slavik.tdam.util.Convert;
 import com.slavik.tdam.util.ListUtil;
 
+import java.util.Calendar;
+
 public class PhotoInfoRoot {
     public PhotoDTO photo;
     public String stat;
@@ -17,7 +19,11 @@ public class PhotoInfoRoot {
         p.setServer(photo.server);
         p.setTitle(photo.title._content);
         p.setPrimary(photo.visibility.isfamily == 1);
-        p.setPosted(Convert.unixToCalendar(Long.parseLong(photo.dateuploaded)));
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(Long.parseLong(photo.dateuploaded) * 1000);
+
+        p.setPosted(cal);
         p.setViews(Integer.parseInt(photo.views));
         p.setComments(new ListUtil<Comment>().emptyArray(Integer.parseInt(photo.comments._content)));
         p.setDescription(photo.description._content);

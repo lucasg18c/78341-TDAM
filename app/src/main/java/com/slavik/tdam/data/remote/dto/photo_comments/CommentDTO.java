@@ -4,6 +4,8 @@ import com.slavik.tdam.model.Comment;
 import com.slavik.tdam.model.User;
 import com.slavik.tdam.util.Convert;
 
+import java.util.Calendar;
+
 public class CommentDTO {
     public String _content;
     public String author;
@@ -21,7 +23,10 @@ public class CommentDTO {
         Comment c = new Comment();
         c.setId(id);
         c.setContent(_content);
-        c.setPosted(Convert.unixToCalendar(Long.parseLong(datecreate)));
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(Long.parseLong(datecreate) * 1000);
+        c.setPosted(cal);
 
         User user = new User();
         user.setId(author);
