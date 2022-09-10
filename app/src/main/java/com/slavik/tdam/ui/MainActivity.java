@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
@@ -16,10 +17,12 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.preference.PreferenceManager;
 import androidx.room.Room;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
+import com.google.android.material.snackbar.Snackbar;
 import com.slavik.tdam.R;
 import com.slavik.tdam.data.local.DatabaseTDAM;
 import com.slavik.tdam.data.repository.IRepository;
@@ -45,18 +48,38 @@ public class MainActivity extends AppCompatActivity {
             lblNoConection.setVisibility(connected ? View.GONE : View.VISIBLE);
 
             if (!connected) {
-                NotificationCompat.Builder builder = new NotificationCompat.Builder(MainActivity.this, "CHANNEL_CONECTION")
-                        .setSmallIcon(R.drawable.ic_camera_wifi)
-                        .setContentTitle("Navegando sin conexión")
-                        .setStyle(new NotificationCompat.BigTextStyle()
-                                .bigText("Podrás acceder a contenido nuevo cuando la conexión se restablezca."))
-                        .setPriority(NotificationCompat.PRIORITY_MAX);
 
-                NotificationManagerCompat notificationManager =
-                        NotificationManagerCompat.from(MainActivity.this);
+                SharedPreferences sharedPreferences =
+                        PreferenceManager.getDefaultSharedPreferences(MainActivity.this /* Activity context */);
+                boolean notify = sharedPreferences.getBoolean("conection_lost_notify", true);
 
-                int id = (int) (Math.random() * 10000);
-                notificationManager.notify(id, builder.build());
+                if (!notify) return;
+
+                boolean notifyByPush = sharedPreferences.getBoolean("conection_lost_notify_method", true);
+
+                if (notifyByPush) {
+
+                    NotificationCompat.Builder builder = new NotificationCompat.Builder(MainActivity.this, "CHANNEL_CONECTION")
+                            .setSmallIcon(R.drawable.ic_camera_wifi)
+                            .setContentTitle("Navegando sin conexión")
+                            .setStyle(new NotificationCompat.BigTextStyle()
+                                    .bigText("Podrás acceder a contenido nuevo cuando la conexión se restablezca."))
+                            .setPriority(NotificationCompat.PRIORITY_MAX);
+
+                    NotificationManagerCompat notificationManager =
+                            NotificationManagerCompat.from(MainActivity.this);
+
+                    int id = (int) (Math.random() * 10000);
+                    notificationManager.notify(id, builder.build());
+                    return;
+                }
+
+                Snackbar.make(
+                        MainActivity.this.findViewById(android.R.id.content),
+                        "Navegando sin conexión",
+                        Snackbar.LENGTH_LONG
+                ).show();
+
             }
         }
     };

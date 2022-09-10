@@ -17,6 +17,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.slavik.tdam.R;
 import com.slavik.tdam.model.Photoset;
 import com.slavik.tdam.ui.MainActivity;
+import com.slavik.tdam.ui.SettingsFragment;
 import com.slavik.tdam.ui.directory.DirectoryFragment;
 
 public class HomeFragment extends Fragment {
@@ -43,6 +44,9 @@ public class HomeFragment extends Fragment {
         rv.setLayoutManager(lm);
         rv.setAdapter(photosetsAdapter);
 
+        v.findViewById(R.id.btnSettings)
+                .setOnClickListener(b -> navigateTo(SettingsFragment.class));
+
         return v;
     }
 
@@ -68,9 +72,13 @@ public class HomeFragment extends Fragment {
 
     public void onPhotosetClicked(Photoset photoset) {
         ((MainActivity) requireActivity()).setCurrentPhotoset(photoset);
+        navigateTo(DirectoryFragment.class);
+    }
+
+    public void navigateTo(Class<? extends Fragment> destination) {
         FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
         fragmentManager.beginTransaction()
-                .replace(R.id.fragment_container_view, DirectoryFragment.class, null)
+                .replace(R.id.fragment_container_view, destination, null)
                 .setReorderingAllowed(true)
                 .addToBackStack(null)
                 .commit();
