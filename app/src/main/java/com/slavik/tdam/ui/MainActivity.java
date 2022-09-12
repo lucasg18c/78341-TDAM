@@ -1,5 +1,6 @@
 package com.slavik.tdam.ui;
 
+import android.Manifest;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
@@ -7,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
@@ -17,6 +19,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
 import androidx.room.Room;
 
@@ -89,6 +92,18 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+
+            requestPermissions(new String[]{
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+            }, 77);
+
+        }
+
         createNotificationChannel();
         lblNoConection = findViewById(R.id.lblNoConection);
 
@@ -100,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
                 .build();
 
         queue = Volley.newRequestQueue(this);
-        repository = new Repository(queue, db, getContentResolver());
+        repository = new Repository(queue, db, getContentResolver(), this);
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()

@@ -1,6 +1,7 @@
 package com.slavik.tdam.data.repository;
 
 import android.content.ContentResolver;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
@@ -19,6 +20,7 @@ import com.slavik.tdam.model.Photo;
 import com.slavik.tdam.model.PhotoContent;
 import com.slavik.tdam.model.PhotoSize;
 import com.slavik.tdam.model.Photoset;
+import com.slavik.tdam.util.ImageStore;
 import com.slavik.tdam.util.Response;
 
 import java.io.IOException;
@@ -39,7 +41,13 @@ public class Repository implements IRepository {
     private final DatabaseTDAM db;
     private final ContentResolver contentResolver;
 
-    public Repository(RequestQueue queue, DatabaseTDAM db, ContentResolver contentResolver) {
+    private final Context mContext;
+
+    public Repository(
+            RequestQueue queue,
+            DatabaseTDAM db,
+            ContentResolver contentResolver,
+            Context context) {
         // Init services
         photosetService = new PhotosetService(queue);
         imageService = new ImageService(queue);
@@ -50,6 +58,8 @@ public class Repository implements IRepository {
         // Database
         this.db = db;
         this.contentResolver = contentResolver;
+
+        mContext = context;
 
     }
 
@@ -173,10 +183,11 @@ public class Repository implements IRepository {
             for (Photo photo : photoset.getPhotos()) {
                 if (photo.getLocalPath() != null) {
                     try {
-                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(
-                                contentResolver,
-                                Uri.parse(photo.getLocalPath())
-                        );
+                        Bitmap bitmap = new ImageStore().getBitmap(photo.getId() + "_" + PhotoSize.w);
+//                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(
+//                                contentResolver,
+//                                Uri.parse(photo.getLocalPath())
+//                        );
 
                         if (bitmap != null) {
 
@@ -207,9 +218,14 @@ public class Repository implements IRepository {
 
         if (content != null) {
 
-            if (saved == null || !exists(saved.localPath)) {
-                photo.setLocalPath(saveBitmap(photo, content));
-            }
+            new ImageStore().saveBitmap(
+                    mContext,
+                    content.getBitmap(),
+                    photo.getId() + "_" + content.getSize().toString()
+            );
+//            if (saved == null || !exists(saved.localPath)) {
+//                photo.setLocalPath(saveBitmap(photo, content));
+//            }
         }
 
         PhotoEntity photoEntity = new PhotoEntity(photo, photoset.getId());
