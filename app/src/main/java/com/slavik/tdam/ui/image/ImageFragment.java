@@ -76,7 +76,7 @@ public class ImageFragment extends Fragment {
             Intent email = new Intent(Intent.ACTION_SEND);
             //email.putExtra(Intent.EXTRA_EMAIL, new String[]{ });
             email.putExtra(Intent.EXTRA_SUBJECT, "Imagen de TDAM");
-            email.putExtra(Intent.EXTRA_TEXT, "Hola! Aquí te comparto una imagen desde mi app para TDAM 😎");
+            email.putExtra(Intent.EXTRA_TEXT, "Hola! Acá te comparto una imagen desde mi app para TDAM 😎");
             String path = MediaStore.Images.Media.insertImage(requireActivity().getContentResolver(), currentPhoto.getHighQuality(), currentPhoto.getTitle(), currentPhoto.getDescription() == null ? "" : currentPhoto.getDescription());
             Uri uri = Uri.parse(path);
 
@@ -88,6 +88,14 @@ public class ImageFragment extends Fragment {
 
         v.findViewById(R.id.btnBack).setOnClickListener(
                 b -> requireActivity().getSupportFragmentManager().popBackStack());
+
+        img.setOnClickListener(b -> {
+            String path = MediaStore.Images.Media.insertImage(requireActivity().getContentResolver(), currentPhoto.getHighQuality(), currentPhoto.getTitle(), currentPhoto.getDescription() == null ? "" : currentPhoto.getDescription());
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(path));
+            intent.addCategory(Intent.CATEGORY_BROWSABLE);
+         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
+            startActivity(intent);
+        });
 
         return v;
     }
@@ -135,10 +143,10 @@ public class ImageFragment extends Fragment {
                     strPhoto.setRefreshing(false);
                     adapter.setComments(comments);
                     divider.setVisibility(comments.size() == 0 ? View.GONE : View.VISIBLE);
-                    if (comments.size()  == 0) {
+                    if (comments.size() == 0) {
                         lblCommentsCount.setText("Sin comentarios");
                     } else {
-                        lblCommentsCount.setText(comments.size()  + " comentarios");
+                        lblCommentsCount.setText(comments.size() + " comentarios");
                     }
                 });
 
