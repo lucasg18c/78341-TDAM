@@ -3,8 +3,6 @@ package com.slavik.tdam.data.repository;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.net.Uri;
-import android.provider.MediaStore;
 
 import com.android.volley.RequestQueue;
 import com.slavik.tdam.data.local.DatabaseTDAM;
@@ -178,26 +176,21 @@ public class Repository implements IRepository {
             Photoset photoset = p.toModel();
 
             for (Photo photo : photoset.getPhotos()) {
-                if (photo.getLocalPath() != null) {
-                    try {
-                        Bitmap bitmap = new ImageStore().getBitmap(photo.getId() + "_" + PhotoSize.w);
-//                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(
-//                                contentResolver,
-//                                Uri.parse(photo.getLocalPath())
-//                        );
+                try {
+                    Bitmap bitmap = new ImageStore().getBitmap(photo.getId() + "_" + PhotoSize.w);
 
-                        if (bitmap != null) {
+                    if (bitmap != null) {
 
-                            PhotoContent content = new PhotoContent();
-                            content.setBitmap(bitmap);
-                            content.setAvailable(true);
-                            content.setSize(PhotoSize.w);
-                            photo.getContent().add(content);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                        PhotoContent content = new PhotoContent();
+                        content.setBitmap(bitmap);
+                        content.setAvailable(true);
+                        content.setSize(PhotoSize.w);
+                        photo.getContent().add(content);
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+
             }
             photosets.add(photoset);
         }
