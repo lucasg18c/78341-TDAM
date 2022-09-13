@@ -86,7 +86,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:fontFamily="@font/inter_semibold"
-                        android:text=""
+                        android:text="Por lucasg18c"
                         android:textColor="#0099FF" />
 
                     <TextView

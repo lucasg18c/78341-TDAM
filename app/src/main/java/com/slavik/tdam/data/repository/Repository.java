@@ -23,8 +23,6 @@ import com.slavik.tdam.model.Photoset;
 import com.slavik.tdam.util.ImageStore;
 import com.slavik.tdam.util.Response;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -158,7 +156,6 @@ public class Repository implements IRepository {
 
                                             // Guarda en caché con ROOM
                                             savePhoto(photo, p, content);
-//                                            savePhotosets();
                                         });
                             }
                         });
@@ -223,39 +220,10 @@ public class Repository implements IRepository {
                     content.getBitmap(),
                     photo.getId() + "_" + content.getSize().toString()
             );
-//            if (saved == null || !exists(saved.localPath)) {
-//                photo.setLocalPath(saveBitmap(photo, content));
-//            }
         }
 
         PhotoEntity photoEntity = new PhotoEntity(photo, photoset.getId());
         db.photoDao().insertPhoto(photoEntity);
-    }
-
-    private boolean exists(String imagePath) {
-        if (imagePath == null) return false;
-
-        try {
-            InputStream inputStream = contentResolver.openInputStream(Uri.parse(imagePath));
-            inputStream.close();
-            return true;
-        } catch (IOException ignored) {
-        }
-        return false;
-    }
-
-    private String saveBitmap(Photo photo, PhotoContent content) {
-        Bitmap bm = content.getBitmap();
-
-        if (bm != null) {
-            return MediaStore.Images.Media.insertImage(
-                    contentResolver,
-                    bm,
-                    photo.getTitle() + "_" + content.getSize().toString(),
-                    photo.getDescription()
-            );
-        }
-        return null;
     }
 
     @Override
@@ -266,6 +234,7 @@ public class Repository implements IRepository {
     @Override
     public void getPhoto(boolean forceCache, Photo photo, PhotoSize size, Response<Photo> response) {
 
+        // En RAM
         Photoset owner = null;
         for (Photoset ps : photosets) {
             for (Photo p : ps.getPhotos()) {
@@ -285,34 +254,23 @@ public class Repository implements IRepository {
             }
         }
 
-        // todo: va a generar bugs ya que no controla la resolución de la foto
-        PhotoEntity pe = db.photoDao().getPhotoById(photo.getId());
-        if (pe != null && exists(pe.localPath)) {
-            try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(
-                        contentResolver,
-                        Uri.parse(photo.getLocalPath())
-                );
+        // En Local
+        Bitmap bm = new ImageStore().getBitmap(photo.getId() + "_" + size.toString());
 
-                if (bitmap != null) {
-
-                    PhotoContent content = new PhotoContent();
-                    content.setBitmap(bitmap);
-                    content.setAvailable(true);
-                    content.setSize(size);
-                    photo.getContent().add(content);
-
-                    response.onResponse(photo, true);
-
-                    if (forceCache) {
-                        return;
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
+        if (bm != null) {
+            PhotoContent content = new PhotoContent();
+            content.setBitmap(bm);
+            content.setAvailable(true);
+            content.setSize(size);
+            photo.getContent().add(content);
+            response.onResponse(photo, true);
+            if (forceCache) {
+                return;
             }
         }
 
+
+        // En API
         Photoset finalOwner = owner;
         imageService.getImage(
                 photo.getId(),
