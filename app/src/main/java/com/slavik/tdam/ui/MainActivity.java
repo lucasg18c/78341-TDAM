@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
                 .build();
 
         queue = Volley.newRequestQueue(this);
-        repository = new Repository(queue, db, getContentResolver(), this);
+        repository = new Repository(this, db, queue);
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()

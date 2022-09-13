@@ -1,6 +1,5 @@
 package com.slavik.tdam.data.repository;
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.graphics.Bitmap;
 
@@ -35,15 +34,14 @@ public class Repository implements IRepository {
 
     // Database
     private final DatabaseTDAM db;
-    private final ContentResolver contentResolver;
 
     private final Context mContext;
 
     public Repository(
-            RequestQueue queue,
+            Context context,
             DatabaseTDAM db,
-            ContentResolver contentResolver,
-            Context context) {
+            RequestQueue queue
+    ) {
         // Init services
         photosetService = new PhotosetService(queue);
         imageService = new ImageService(queue);
@@ -53,7 +51,6 @@ public class Repository implements IRepository {
 
         // Database
         this.db = db;
-        this.contentResolver = contentResolver;
 
         mContext = context;
 
@@ -134,7 +131,7 @@ public class Repository implements IRepository {
                                         photo.getId(),
                                         photo.getServer(),
                                         photo.getSecret(),
-                                        PhotoSize.w,
+                                        PhotoSize.n,
                                         (bitmap, sBitmap) -> {
 
                                             // Retorna que hubo un error
@@ -145,7 +142,7 @@ public class Repository implements IRepository {
 
                                             PhotoContent content = new PhotoContent();
                                             content.setAvailable(true);
-                                            content.setSize(PhotoSize.w);
+                                            content.setSize(PhotoSize.n);
                                             content.setBitmap(bitmap);
                                             photo.getContent().add(content);
 
@@ -177,14 +174,14 @@ public class Repository implements IRepository {
 
             for (Photo photo : photoset.getPhotos()) {
                 try {
-                    Bitmap bitmap = new ImageStore().getBitmap(photo.getId() + "_" + PhotoSize.w);
+                    Bitmap bitmap = new ImageStore().getBitmap(photo.getId() + "_" + PhotoSize.n);
 
                     if (bitmap != null) {
 
                         PhotoContent content = new PhotoContent();
                         content.setBitmap(bitmap);
                         content.setAvailable(true);
-                        content.setSize(PhotoSize.w);
+                        content.setSize(PhotoSize.n);
                         photo.getContent().add(content);
                     }
                 } catch (Exception e) {

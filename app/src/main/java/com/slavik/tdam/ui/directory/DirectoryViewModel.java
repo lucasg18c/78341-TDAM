@@ -104,7 +104,7 @@ public class DirectoryViewModel extends ViewModel {
 
     public void fetchPhotos() {
         for (Photo p : currentPhotoset.getPhotos()) {
-            repository.getPhoto(true, p, PhotoSize.w, (res, success) -> {
+            repository.getPhoto(true, p, PhotoSize.n, (res, success) -> {
                 List<Photo> photos = _photos.getValue();
 
                 for (int i = 0; i < photos.size(); i++) {
