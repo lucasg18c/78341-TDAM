@@ -19,16 +19,15 @@ import com.slavik.tdam.model.Photoset;
 import com.slavik.tdam.ui.MainActivity;
 import com.slavik.tdam.ui.SettingsFragment;
 import com.slavik.tdam.ui.directory.DirectoryFragment;
+import com.slavik.tdam.ui.error.ErrorFragment;
+
+import java.util.List;
 
 public class HomeFragment extends Fragment {
 
     private HomeViewModel mViewModel;
     private PhotosetsAdapter photosetsAdapter;
     private SwipeRefreshLayout strHome;
-
-    public static HomeFragment newInstance() {
-        return new HomeFragment();
-    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -39,13 +38,14 @@ public class HomeFragment extends Fragment {
         photosetsAdapter = new PhotosetsAdapter(this);
 
         strHome = v.findViewById(R.id.strHome);
+        strHome.setRefreshing(true);
 
         RecyclerView rv = v.findViewById(R.id.listPhotosets);
         rv.setLayoutManager(lm);
         rv.setAdapter(photosetsAdapter);
 
         v.findViewById(R.id.btnSettings)
-                .setOnClickListener(b -> navigateTo(SettingsFragment.class));
+                .setOnClickListener(b -> navigateTo(SettingsFragment.class, true));
 
         return v;
     }
@@ -68,14 +68,27 @@ public class HomeFragment extends Fragment {
                 });
 
         strHome.setOnRefreshListener(() -> mViewModel.fetchPhotosets());
+
+        mViewModel.error().observe(getViewLifecycleOwner(), error -> {
+            if (error.length() == 0) return;
+            strHome.setRefreshing(false);
+            List<Photoset> photosets = mViewModel.photosets().getValue();
+            if (photosets == null || photosets.size() == 0) {
+                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.fragment_container_view, ErrorFragment.class, null)
+                        .commit();
+
+            }
+        });
     }
 
     public void onPhotosetClicked(Photoset photoset) {
         ((MainActivity) requireActivity()).setCurrentPhotoset(photoset);
-        navigateTo(DirectoryFragment.class);
+        navigateTo(DirectoryFragment.class, true);
     }
 
-    public void navigateTo(Class<? extends Fragment> destination) {
+    public void navigateTo(Class<? extends Fragment> destination, boolean animate) {
         FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .setCustomAnimations(

@@ -22,4 +22,7 @@
     <string name="attachment_summary_on">Automatically download attachments for incoming emails
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="no_wifi">sin wifi</string>
+    <string name="no_wifi_header">Oh... Parece que no tenés conexión a internet 😕</string>
+    <string name="no_wifi_message">Cuando tu conexión se reestablesca el contenido se mostrará automáticamente</string>
 </resources>

@@ -24,18 +24,17 @@ import com.slavik.tdam.ui.MainActivity;
 import com.slavik.tdam.ui.image.ImageFragment;
 
 import java.util.Calendar;
+import java.util.List;
 
 public class DirectoryFragment extends Fragment {
 
+    private RecyclerView rv;
     private DirectoryViewModel mViewModel;
     private PhotoAdapter adapter;
     private SwipeRefreshLayout strDirectory;
     private Chip chipOrderBy;
     private Chip chipOrderType;
-
-    public static DirectoryFragment newInstance() {
-        return new DirectoryFragment();
-    }
+    private View imgNoWifi;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -43,10 +42,11 @@ public class DirectoryFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_directory, container, false);
 
         strDirectory = v.findViewById(R.id.strDirectory);
+        strDirectory.setRefreshing(true);
         chipOrderBy = v.findViewById(R.id.chipOrderBy);
         chipOrderType = v.findViewById(R.id.chipOrderType);
 
-        RecyclerView rv = v.findViewById(R.id.listPhotos);
+        rv = v.findViewById(R.id.listPhotos);
         adapter = new PhotoAdapter(this);
         GridLayoutManager layoutManager = new GridLayoutManager(requireContext(), 2);
 
@@ -75,6 +75,7 @@ public class DirectoryFragment extends Fragment {
         v.findViewById(R.id.btnBack).setOnClickListener(
                 b -> requireActivity().getSupportFragmentManager().popBackStack());
 
+        imgNoWifi = v.findViewById(R.id.imgNoWifi);
 
         return v;
     }
@@ -112,8 +113,31 @@ public class DirectoryFragment extends Fragment {
                 .observe(getViewLifecycleOwner(), photos -> {
                     adapter.setPhotos(photos);
                     strDirectory.setRefreshing(false);
-                    //mViewModel.order();
                 });
+
+        mViewModel.error().observe(getViewLifecycleOwner(), error -> {
+            if (error.length() == 0) return;
+
+            strDirectory.setRefreshing(false);
+            List<Photo> photos = mViewModel.photos().getValue();
+
+            if (photos == null || photos.size() == 0 || photos.get(0).getLowQuality() == null) {
+                boolean isConnected = Boolean.TRUE.equals(((MainActivity) requireActivity()).isConnected().getValue());
+
+                if (!isConnected) {
+                    imgNoWifi.setVisibility(View.VISIBLE);
+                    rv.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        ((MainActivity) requireActivity()).isConnected().observe(getViewLifecycleOwner(), connected -> {
+            if (connected) {
+                imgNoWifi.setVisibility(View.GONE);
+                rv.setVisibility(View.VISIBLE);
+                mViewModel.fetchPhotos();
+            }
+        });
 
         strDirectory.setOnRefreshListener(() -> mViewModel.fetchPhotos());
     }

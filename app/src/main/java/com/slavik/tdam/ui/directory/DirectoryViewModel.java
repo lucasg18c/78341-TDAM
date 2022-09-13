@@ -17,6 +17,11 @@ import java.util.Locale;
 
 public class DirectoryViewModel extends ViewModel {
 
+    private final MutableLiveData<String> _error = new MutableLiveData<>("");
+    public LiveData<String> error() {
+        return _error;
+    }
+
     private final MutableLiveData<List<Photo>> _photos = new MutableLiveData<>(new ArrayList<>());
     private IRepository repository;
     private Photoset currentPhotoset;
@@ -105,6 +110,12 @@ public class DirectoryViewModel extends ViewModel {
     public void fetchPhotos() {
         for (Photo p : currentPhotoset.getPhotos()) {
             repository.getPhoto(true, p, PhotoSize.n, (res, success) -> {
+
+                if (!success) {
+                    _error.postValue("No se pudieron recuperar las fotos");
+                    return;
+                }
+
                 List<Photo> photos = _photos.getValue();
 
                 for (int i = 0; i < photos.size(); i++) {

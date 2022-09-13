@@ -17,6 +17,11 @@ public class HomeViewModel extends ViewModel {
     private final MutableLiveData<List<Photoset>> _photosets =
             new MutableLiveData<>(new ArrayList<>());
 
+    private final MutableLiveData<String> _error = new MutableLiveData<>("");
+    public LiveData<String> error() {
+        return _error;
+    }
+
     private IRepository repository;
 
     public void init(Fragment fragment) {
@@ -32,8 +37,7 @@ public class HomeViewModel extends ViewModel {
     public void fetchPhotosets() {
         repository.getPhotosets(false, (data, isSuccess) -> {
             if (!isSuccess) {
-                // mostrar snack de error
-                // ... todo
+                _error.postValue("No se pudieron recuperar los directorios.");
                 return;
             }
 

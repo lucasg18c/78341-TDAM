@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/strDirectory"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -119,16 +119,15 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="24dp"
                     android:layout_marginTop="14dp"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
                         android:layout_weight="1"
-                        >
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
 
                         <com.google.android.material.chip.Chip
                             android:id="@+id/chipOrderBy"
@@ -154,12 +153,12 @@
                             android:checked="true"
                             android:fontFamily="@font/inter_semibold"
                             android:text="Ascendente"
-                            app:chipStrokeColor="@color/grey"
                             android:textColor="@color/grey"
                             app:checkedIconEnabled="false"
                             app:checkedIconVisible="false"
                             app:chipBackgroundColor="@color/mid_blue"
-                            app:chipStartPadding="10dp" />
+                            app:chipStartPadding="10dp"
+                            app:chipStrokeColor="@color/grey" />
                     </LinearLayout>
 
                     <TextView
@@ -179,7 +178,44 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/listPhotos"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
+
+                <LinearLayout
+                    android:id="@+id/imgNoWifi"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:visibility="gone">
+
+
+                    <ImageView
+                        android:layout_width="220dp"
+                        android:layout_height="220dp"
+                        android:contentDescription="@string/no_wifi"
+                        android:src="@drawable/ic_no_wifi" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="48dp"
+                        android:layout_marginTop="32dp"
+                        android:fontFamily="@font/inter_semibold"
+                        android:text="@string/no_wifi_header"
+                        android:textAlignment="center"
+                        android:textColor="@color/grey" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="40dp"
+                        android:layout_marginTop="32dp"
+                        android:text="@string/no_wifi_message"
+                        android:textAlignment="center"
+                        android:textColor="@color/grey"
+                        android:textSize="11sp" />
+                </LinearLayout>
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
     </LinearLayout>

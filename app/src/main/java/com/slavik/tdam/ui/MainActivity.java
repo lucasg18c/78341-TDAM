@@ -20,6 +20,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.preference.PreferenceManager;
 import androidx.room.Room;
 
@@ -36,6 +38,7 @@ import com.slavik.tdam.ui.home.HomeFragment;
 
 public class MainActivity extends AppCompatActivity {
 
+    private final MutableLiveData<Boolean> _isConnected = new MutableLiveData<>();
     private RequestQueue queue;
     private IRepository repository;
     private Photoset currentPhotoset;
@@ -49,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
             NetworkInfo activeNetworkInfo = connectivityManager != null ? connectivityManager.getActiveNetworkInfo() : null;
             boolean connected = activeNetworkInfo != null && activeNetworkInfo.isConnected();
             lblNoConection.setVisibility(connected ? View.GONE : View.VISIBLE);
+
+            _isConnected.setValue(connected);
 
             if (!connected) {
 
@@ -86,6 +91,10 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     };
+
+    public LiveData<Boolean> isConnected() {
+        return _isConnected;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
