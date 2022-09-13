@@ -78,6 +78,12 @@ public class HomeFragment extends Fragment {
     public void navigateTo(Class<? extends Fragment> destination) {
         FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
         fragmentManager.beginTransaction()
+                .setCustomAnimations(
+                        R.anim.slide_in,  // enter
+                        R.anim.fade_out,  // exit
+                        R.anim.fade_in,   // popEnter
+                        R.anim.slide_out  // popExit
+                )
                 .replace(R.id.fragment_container_view, destination, null)
                 .setReorderingAllowed(true)
                 .addToBackStack(null)
