@@ -268,7 +268,10 @@ public class Repository implements IRepository {
                 photo.getSecret(),
                 size,
                 (data, isSuccess) -> {
-                    if (isSuccess) {
+                    if (!isSuccess) {
+                        response.onResponse(null, false);
+                        return;
+                    }
                         PhotoContent content = new PhotoContent();
                         content.setSize(size);
                         content.setAvailable(true);
@@ -279,7 +282,7 @@ public class Repository implements IRepository {
                         if (finalOwner != null) {
                             savePhoto(photo, finalOwner, content);
                         }
-                    }
+
                 });
     }
 

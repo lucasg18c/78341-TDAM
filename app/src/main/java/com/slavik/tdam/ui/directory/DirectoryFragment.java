@@ -112,7 +112,10 @@ public class DirectoryFragment extends Fragment {
         mViewModel.photos()
                 .observe(getViewLifecycleOwner(), photos -> {
                     adapter.setPhotos(photos);
-                    strDirectory.setRefreshing(false);
+                    if (photos.size() > 0) {
+                        strDirectory.setRefreshing(false);
+                        rv.setVisibility(View.VISIBLE);
+                    }
                 });
 
         mViewModel.error().observe(getViewLifecycleOwner(), error -> {
@@ -121,14 +124,26 @@ public class DirectoryFragment extends Fragment {
             strDirectory.setRefreshing(false);
             List<Photo> photos = mViewModel.photos().getValue();
 
-            if (photos == null || photos.size() == 0 || photos.get(0).getLowQuality() == null) {
-                boolean isConnected = Boolean.TRUE.equals(((MainActivity) requireActivity()).isConnected().getValue());
+            if (photos == null || photos.size() == 0) {
+                imgNoWifi.setVisibility(View.VISIBLE);
+                rv.setVisibility(View.GONE);
+            }
 
-                if (!isConnected) {
-                    imgNoWifi.setVisibility(View.VISIBLE);
-                    rv.setVisibility(View.GONE);
+            boolean showError = false;
+            for (Photo p : photos) {
+                if (p.getLowQuality() == null) {
+                    showError = true;
+                    break;
                 }
             }
+
+            boolean isConnected = Boolean.TRUE.equals(((MainActivity) requireActivity()).isConnected().getValue());
+
+            if (showError) {
+                imgNoWifi.setVisibility(View.VISIBLE);
+                rv.setVisibility(View.GONE);
+            }
+            
         });
 
         ((MainActivity) requireActivity()).isConnected().observe(getViewLifecycleOwner(), connected -> {

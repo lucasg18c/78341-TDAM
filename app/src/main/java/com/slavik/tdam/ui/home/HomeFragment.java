@@ -64,7 +64,8 @@ public class HomeFragment extends Fragment {
         mViewModel.photosets().observe(getViewLifecycleOwner(),
                 p -> {
                     photosetsAdapter.setPhotosets(p);
-                    strHome.setRefreshing(false);
+                    if (p.size() > 0)
+                        strHome.setRefreshing(false);
                 });
 
         strHome.setOnRefreshListener(() -> mViewModel.fetchPhotosets());
