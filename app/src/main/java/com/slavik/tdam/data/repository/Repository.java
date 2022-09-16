@@ -115,6 +115,7 @@ public class Repository implements IRepository {
                             photo.setDescription(photoInfo.getDescription());
                             photo.setPosted(photoInfo.getPosted());
                             photo.setViews(photoInfo.getViews());
+                            photo.setCommentsCount(photoInfo.getCommentsCount());
 
                             // Envía datos al front
                             response.onResponse(photosets, true);

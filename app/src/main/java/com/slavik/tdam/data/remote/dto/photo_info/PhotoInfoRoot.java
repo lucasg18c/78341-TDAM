@@ -27,6 +27,7 @@ public class PhotoInfoRoot {
         p.setViews(Integer.parseInt(photo.views));
         p.setComments(new ListUtil<Comment>().emptyArray(Integer.parseInt(photo.comments._content)));
         p.setDescription(photo.description._content);
+        p.setCommentsCount(Integer.parseInt(photo.comments._content));
 
         return p;
     }

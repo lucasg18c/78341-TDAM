@@ -25,6 +25,8 @@ public class PhotoEntity {
     public long views;
     public String localPath;
 
+    public int commentCount;
+
     public PhotoEntity() {
     }
 
@@ -45,6 +47,7 @@ public class PhotoEntity {
         title = p.getTitle();
         views = p.getViews();
         localPath = p.getLocalPath();
+        commentCount = p.getCommentsCount();
     }
 
     public Photo toModel() {
@@ -60,6 +63,7 @@ public class PhotoEntity {
         //p.setComments(new ArrayList<>(Integer.parseInt(photo.comments._content)));
         p.setDescription(description);
         p.setLocalPath(localPath);
+        p.setCommentsCount(commentCount);
 
         return p;
     }

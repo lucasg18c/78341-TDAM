@@ -125,11 +125,11 @@ public class ImageFragment extends Fragment {
                 lblDescription.setVisibility(View.GONE);
             }
 
-            divider.setVisibility(photo.commentsCount() == 0 ? View.GONE : View.VISIBLE);
-            if (photo.commentsCount() == 0) {
+            divider.setVisibility(photo.getCommentsCount() == 0 ? View.GONE : View.VISIBLE);
+            if (photo.getCommentsCount() == 0) {
                 lblCommentsCount.setText("Sin comentarios");
             } else {
-                lblCommentsCount.setText(photo.commentsCount() + " comentarios");
+                lblCommentsCount.setText(photo.getCommentsCount() + " comentarios");
             }
 
             Bitmap bm = photo.getHighQuality();

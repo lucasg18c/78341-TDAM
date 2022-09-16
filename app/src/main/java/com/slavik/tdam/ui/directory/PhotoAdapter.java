@@ -72,7 +72,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
             mPhoto = photo;
 
             lblPhotoTitle.setText(photo.getTitle());
-            lblCommentsCount.setText(String.valueOf(photo.commentsCount()));
+            lblCommentsCount.setText(String.valueOf(photo.getCommentsCount()));
 
             Bitmap bm = photo.getLowQuality();
 

@@ -15,7 +15,7 @@ public class Photoset {
         long sum = 0;
         for (Photo p : photos) {
             if (p == null) continue;
-            sum += p.commentsCount();
+            sum += p.getCommentsCount();
         }
         return sum;
     }

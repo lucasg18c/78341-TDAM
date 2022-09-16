@@ -18,9 +18,14 @@ public class Photo {
     private String title;
     private long views;
     private String localPath;
+    private int commentsCount;
 
-    public int commentsCount() {
-        return comments.size();
+    public int getCommentsCount() {
+        return commentsCount;
+    }
+
+    public void setCommentsCount(int commentsCount) {
+        this.commentsCount = commentsCount;
     }
 
     public Bitmap getLowQuality() {
