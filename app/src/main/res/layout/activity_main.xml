@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:background="#232323"
         android:paddingVertical="3dp"
-        android:text="Explorando sin conexión"
+        android:text="@string/exploring_no_wifi"
         android:visibility="gone"
         android:textAlignment="center"
         android:textColor="#fff"

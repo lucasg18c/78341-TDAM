@@ -25,4 +25,12 @@
     <string name="no_wifi">sin wifi</string>
     <string name="no_wifi_header">Oh... Parece que no tenés conexión a internet 😕</string>
     <string name="no_wifi_message">Cuando tu conexión se reestablesca el contenido se mostrará automáticamente</string>
+    <string name="exploring_no_wifi">Explorando sin conexión</string>
+    <string name="date">Fecha</string>
+    <string name="ascending">Ascendente</string>
+    <string name="user_name">Lucas Slavik</string>
+    <string name="user">lucasg18c</string>
+    <string name="user_id">196361992@N04</string>
+    <string name="settings">Ajustes</string>
+    <string name="uploaded_by">Por lucasg18c</string>
 </resources>
