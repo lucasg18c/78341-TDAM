@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.slavik.tdam.R;
 import com.slavik.tdam.data.repository.IRepository;
 import com.slavik.tdam.model.Photo;
 import com.slavik.tdam.model.PhotoSize;
@@ -18,16 +19,20 @@ import java.util.Locale;
 public class DirectoryViewModel extends ViewModel {
 
     private final MutableLiveData<String> _error = new MutableLiveData<>("");
+    private final MutableLiveData<List<Photo>> _photos = new MutableLiveData<>(new ArrayList<>());
+    private IRepository repository;
+    private Photoset currentPhotoset;
+    private boolean orderByName = false;
+    private boolean orderAsc = true;
+    private Fragment mFragment;
+
     public LiveData<String> error() {
         return _error;
     }
 
-    private final MutableLiveData<List<Photo>> _photos = new MutableLiveData<>(new ArrayList<>());
-    private IRepository repository;
-    private Photoset currentPhotoset;
-
-    private boolean orderByName = false;
-    private boolean orderAsc = true;
+    private String getString(int resId) {
+        return mFragment.getString(resId);
+    }
 
     public void setOrderByName(boolean orderByName) {
         this.orderByName = orderByName;
@@ -101,6 +106,7 @@ public class DirectoryViewModel extends ViewModel {
 
     public void init(Fragment fragment) {
         MainActivity activity = (MainActivity) fragment.requireActivity();
+        mFragment = fragment;
         repository = activity.getRepository();
         currentPhotoset = activity.getCurrentPhotoset();
         _photos.postValue(currentPhotoset.getPhotos());
@@ -112,11 +118,12 @@ public class DirectoryViewModel extends ViewModel {
             repository.getPhoto(true, p, PhotoSize.n, (res, success) -> {
 
                 if (!success) {
-                    _error.postValue("No se pudieron recuperar las fotos");
+                    _error.postValue(getString(R.string.photos_load_error));
                     return;
                 }
 
                 List<Photo> photos = _photos.getValue();
+                if (photos == null) return;
 
                 for (int i = 0; i < photos.size(); i++) {
                     if (photos.get(i).getId().equals(res.getId())) {

@@ -27,7 +27,6 @@ import java.util.Calendar;
 import java.util.List;
 
 public class DirectoryFragment extends Fragment {
-
     private RecyclerView rv;
     private DirectoryViewModel mViewModel;
     private PhotoAdapter adapter;
@@ -67,10 +66,18 @@ public class DirectoryFragment extends Fragment {
             lblDescription.setVisibility(View.GONE);
         }
 
-        ((TextView) v.findViewById(R.id.lblCreated)).setText("Creada " + date);
+        String created = getString(R.string.created) + " " + date;
+        ((TextView) v.findViewById(R.id.lblCreated)).setText(created);
         ((TextView) v.findViewById(R.id.lblViewsCount)).setText(String.valueOf(photoset.viewsCount()));
         ((TextView) v.findViewById(R.id.lblCommentsCount)).setText(String.valueOf(photoset.commentsCount()));
-        ((TextView) v.findViewById(R.id.lblPhotosCount)).setText(photoset.getPhotos().size() + " fotos");
+
+        int photosCount = photoset.photosCount();
+        String lblPhotosCountText =
+                photosCount == 0
+                        ? getString(R.string.no_photos)
+                        : (photosCount + " " + getString(R.string.photos));
+
+        ((TextView) v.findViewById(R.id.lblPhotosCount)).setText(lblPhotosCountText);
 
         v.findViewById(R.id.btnBack).setOnClickListener(
                 b -> requireActivity().getSupportFragmentManager().popBackStack());
@@ -94,7 +101,7 @@ public class DirectoryFragment extends Fragment {
 
         chipOrderBy.setOnCheckedChangeListener((compoundButton, b) -> {
             mViewModel.setOrderByName(b);
-            chipOrderBy.setText(b ? "Nombre" : "Fecha");
+            chipOrderBy.setText(b ? getString(R.string.title) : getString(R.string.date));
             chipOrderBy.setChipIcon(getResources().getDrawable(b
                     ? R.drawable.ic_bookmark
                     : R.drawable.ic_calendar));
@@ -102,7 +109,7 @@ public class DirectoryFragment extends Fragment {
 
         chipOrderType.setOnCheckedChangeListener((compoundButton, b) -> {
             mViewModel.setOrderAsc(b);
-            chipOrderType.setText(b ? "Ascendente" : "Descendente");
+            chipOrderType.setText(b ? getString(R.string.ascending) : getString(R.string.descending));
             chipOrderType.setChipBackgroundColorResource(b
                     ? R.color.mid_blue
                     : R.color.light_blue);
@@ -127,6 +134,7 @@ public class DirectoryFragment extends Fragment {
             if (photos == null || photos.size() == 0) {
                 imgNoWifi.setVisibility(View.VISIBLE);
                 rv.setVisibility(View.GONE);
+                return;
             }
 
             boolean showError = false;
@@ -137,13 +145,11 @@ public class DirectoryFragment extends Fragment {
                 }
             }
 
-            boolean isConnected = Boolean.TRUE.equals(((MainActivity) requireActivity()).isConnected().getValue());
-
             if (showError) {
                 imgNoWifi.setVisibility(View.VISIBLE);
                 rv.setVisibility(View.GONE);
             }
-            
+
         });
 
         ((MainActivity) requireActivity()).isConnected().observe(getViewLifecycleOwner(), connected -> {

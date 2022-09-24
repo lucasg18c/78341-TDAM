@@ -37,6 +37,10 @@ public class Photoset {
         return sum;
     }
 
+    public int photosCount() {
+        return photos.size();
+    }
+
     public void addPhoto(Photo photo) {
         if (photos == null) {
             photos = new ArrayList<>();

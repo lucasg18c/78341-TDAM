@@ -23,7 +23,7 @@
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="no_wifi">sin wifi</string>
-    <string name="no_wifi_header">Oh... Parece que no tenés conexión a internet 😕</string>
+    <string name="no_wifi_header">Oh… Parece que no tenés conexión a internet 😕</string>
     <string name="no_wifi_message">Cuando tu conexión se reestablesca el contenido se mostrará automáticamente</string>
     <string name="exploring_no_wifi">Explorando sin conexión</string>
     <string name="date">Fecha</string>
@@ -33,4 +33,18 @@
     <string name="user_id">196361992@N04</string>
     <string name="settings">Ajustes</string>
     <string name="uploaded_by">Por lucasg18c</string>
+    <string name="photoset_load_error">No se pudieron recuperar los directorios.</string>
+    <string name="no_photos">Sin fotos</string>
+    <string name="created">Creada</string>
+    <string name="title">Título</string>
+    <string name="descending">Descendente</string>
+    <string name="photos_load_error">No se pudieron recuperar las fotos</string>
+    <string name="share_title">Imagen de TDAM</string>
+    <string name="share_text">Hola! Acá te comparto una imagen desde mi app para TDAM 😎</string>
+    <string name="send_by_email">Enviar por email</string>
+    <string name="uploaded">Subida</string>
+    <string name="no_comments">Sin comentarios</string>
+    <string name="comments">comentarios</string>
+    <string name="connection_warning">Alerta de conexión</string>
+    <string name="connection_channel_description">Notificaciones sobre el estado de conexión del dispositivo en tiempo de ejecución</string>
 </resources>

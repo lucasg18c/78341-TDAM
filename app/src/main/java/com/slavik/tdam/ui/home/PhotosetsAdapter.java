@@ -57,9 +57,11 @@ public class PhotosetsAdapter extends RecyclerView.Adapter<PhotosetsAdapter.Phot
 
         private final TextView lblTitle;
         private final TextView lblPhotosCount;
+        private final TextView lblPhotos;
         private final TextView lblDescription;
         private final TextView lblViewsCount;
         private final TextView lblCommentsCount;
+        private final TextView lblNoPhotos;
         private final ImageView imgPhotoset;
         private Photoset mPhotoset;
 
@@ -68,35 +70,40 @@ public class PhotosetsAdapter extends RecyclerView.Adapter<PhotosetsAdapter.Phot
 
             lblTitle = itemView.findViewById(R.id.lblTitle);
             lblPhotosCount = itemView.findViewById(R.id.lblPhotosCount);
+            lblPhotos = itemView.findViewById(R.id.lblPhotos);
+            lblNoPhotos = itemView.findViewById(R.id.lblNoPhotos);
             lblDescription = itemView.findViewById(R.id.lblDescription);
             lblViewsCount = itemView.findViewById(R.id.lblViewsCount);
             lblCommentsCount = itemView.findViewById(R.id.lblCommentsCount);
             imgPhotoset = itemView.findViewById(R.id.imgPhotoset);
 
-            itemView.findViewById(R.id.card_photoset).setOnClickListener(v -> {
-                mFragment.onPhotosetClicked(mPhotoset);
-            });
+            itemView.findViewById(R.id.card_photoset).setOnClickListener(
+                    v -> mFragment.onPhotosetClicked(mPhotoset));
         }
 
         public void bind(Photoset photoset) {
             mPhotoset = photoset;
 
-            String photosCount = String.valueOf(photoset.getPhotos().size());
-            Photo primary = photoset.getPrimary();
+            int photosCount = photoset.photosCount();
 
-            if (primary != null){
-                    Bitmap bm = primary.getLowQuality();
-                if (bm != null) {
-                    imgPhotoset.setImageBitmap(bm);
-                }
-            }
+            lblNoPhotos.setVisibility(photosCount == 0 ? View.VISIBLE : View.GONE);
+            lblPhotosCount.setText(String.valueOf(photosCount));
+            lblPhotosCount.setVisibility(photosCount == 0 ? View.GONE : View.VISIBLE);
+            lblPhotos.setVisibility(photosCount == 0 ? View.GONE : View.VISIBLE);
 
             lblTitle.setText(photoset.getTitle());
-            lblPhotosCount.setText(photosCount.equals("0") ? "Sin" : photosCount);
             lblDescription.setText(photoset.getDescription());
             lblViewsCount.setText(String.valueOf(photoset.viewsCount()));
             lblCommentsCount.setText(String.valueOf(photoset.commentsCount()));
 
+            Photo primary = photoset.getPrimary();
+
+            if (primary != null) {
+                Bitmap bm = primary.getLowQuality();
+                if (bm != null) {
+                    imgPhotoset.setImageBitmap(bm);
+                }
+            }
         }
     }
 }

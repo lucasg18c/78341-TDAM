@@ -57,6 +57,14 @@
                     android:textSize="16sp" />
 
                 <TextView
+                    android:id="@+id/lblNoPhotos"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/no_photos"
+                    android:textSize="12sp"
+                    android:visibility="gone"/>
+
+                <TextView
                     android:id="@+id/lblPhotosCount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -64,6 +72,7 @@
                     android:textSize="12sp" />
 
                 <TextView
+                    android:id="@+id/lblPhotos"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/photos"

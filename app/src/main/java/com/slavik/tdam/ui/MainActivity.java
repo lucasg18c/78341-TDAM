@@ -11,7 +11,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -38,6 +37,9 @@ import com.slavik.tdam.ui.home.HomeFragment;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String CONNECTION_LOST_NOTIFY_METHOD = "conection_lost_notify_method";
+    private static final String CONNECTION_LOST_NOTIFY = "conection_lost_notify";
+    private static final String NOTIFICATIONS_CHANNEL_NAME = "CHANNEL_CONECTION";
     private final MutableLiveData<Boolean> _isConnected = new MutableLiveData<>();
     private RequestQueue queue;
     private IRepository repository;
@@ -49,7 +51,10 @@ public class MainActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             ConnectivityManager connectivityManager
                     = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo activeNetworkInfo = connectivityManager != null ? connectivityManager.getActiveNetworkInfo() : null;
+            NetworkInfo activeNetworkInfo = connectivityManager != null
+                    ? connectivityManager.getActiveNetworkInfo()
+                    : null;
+
             boolean connected = activeNetworkInfo != null && activeNetworkInfo.isConnected();
             lblNoConection.setVisibility(connected ? View.GONE : View.VISIBLE);
 
@@ -58,20 +63,22 @@ public class MainActivity extends AppCompatActivity {
             if (!connected) {
 
                 SharedPreferences sharedPreferences =
-                        PreferenceManager.getDefaultSharedPreferences(MainActivity.this /* Activity context */);
-                boolean notify = sharedPreferences.getBoolean("conection_lost_notify", true);
+                        PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+                boolean notify = sharedPreferences.getBoolean(CONNECTION_LOST_NOTIFY, true);
 
                 if (!notify) return;
 
-                boolean notifyByPush = sharedPreferences.getBoolean("conection_lost_notify_method", true);
+                boolean notifyByPush =
+                        sharedPreferences.getBoolean(CONNECTION_LOST_NOTIFY_METHOD, true);
 
                 if (notifyByPush) {
 
-                    NotificationCompat.Builder builder = new NotificationCompat.Builder(MainActivity.this, "CHANNEL_CONECTION")
+                    NotificationCompat.Builder builder = new NotificationCompat
+                            .Builder(MainActivity.this, NOTIFICATIONS_CHANNEL_NAME)
                             .setSmallIcon(R.drawable.ic_camera_wifi)
-                            .setContentTitle("Navegando sin conexión")
+                            .setContentTitle(getString(R.string.exploring_no_wifi))
                             .setStyle(new NotificationCompat.BigTextStyle()
-                                    .bigText("Podrás acceder a contenido nuevo cuando la conexión se restablezca."))
+                                    .bigText(getString(R.string.no_wifi_message)))
                             .setPriority(NotificationCompat.PRIORITY_MAX);
 
                     NotificationManagerCompat notificationManager =
@@ -84,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
 
                 Snackbar.make(
                         MainActivity.this.findViewById(android.R.id.content),
-                        "Navegando sin conexión",
+                        getString(R.string.exploring_no_wifi),
                         Snackbar.LENGTH_LONG
                 ).show();
 
@@ -135,15 +142,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = "Alerta de conexión";
-            String description = "Notificaciones sobre el estado de conexión del dispositivo en tiempo de ejecución";
-            int importance = NotificationManager.IMPORTANCE_HIGH;
-            NotificationChannel channel = new NotificationChannel("CHANNEL_CONECTION", name, importance);
-            channel.setDescription(description);
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-        }
+        CharSequence name = getString(R.string.connection_warning);
+        String description = getString(R.string.connection_channel_description);
+        int importance = NotificationManager.IMPORTANCE_HIGH;
+        NotificationChannel channel =
+                new NotificationChannel(NOTIFICATIONS_CHANNEL_NAME, name, importance);
+        channel.setDescription(description);
+        NotificationManager notificationManager = getSystemService(NotificationManager.class);
+        notificationManager.createNotificationChannel(channel);
     }
 
     @Override
