@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -131,7 +132,22 @@ public class ImageFragment extends Fragment {
 
             Bitmap bm = photo.getHighQuality();
             if (bm != null) {
-                img.setImageBitmap(bm);
+                String path = Environment
+                        .getExternalStorageDirectory()
+                        + "/Pictures/TDAM/"
+                        + photo.getId() + "_b.png";
+                img.setImageURI(Uri.parse(path));
+            }
+            else {
+                bm = photo.getLowQuality();
+
+                if (bm != null) {
+                    String path = Environment
+                            .getExternalStorageDirectory()
+                            + "/Pictures/TDAM/"
+                            + photo.getId() + "_n.png";
+                    img.setImageURI(Uri.parse(path));
+                }
             }
         });
 

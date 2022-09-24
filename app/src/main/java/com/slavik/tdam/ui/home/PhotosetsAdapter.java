@@ -2,6 +2,8 @@ package com.slavik.tdam.ui.home;
 
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -98,11 +100,14 @@ public class PhotosetsAdapter extends RecyclerView.Adapter<PhotosetsAdapter.Phot
 
             Photo primary = photoset.getPrimary();
 
+
             if (primary != null) {
-                Bitmap bm = primary.getLowQuality();
-                if (bm != null) {
-                    imgPhotoset.setImageBitmap(bm);
-                }
+                String path = Environment
+                        .getExternalStorageDirectory()
+                        + "/Pictures/TDAM/"
+                        + primary.getId() + "_n.png";
+
+                imgPhotoset.setImageURI(Uri.parse(path));
             }
         }
     }

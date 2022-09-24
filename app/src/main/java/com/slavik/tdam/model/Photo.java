@@ -35,7 +35,7 @@ public class Photo {
     }
 
     public Bitmap getHighQuality() {
-        if (content.size() == 0) return null;
+        if (content.size() < 2) return null;
 
         return content.get(content.size() - 1).getBitmap();
     }
